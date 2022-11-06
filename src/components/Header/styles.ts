@@ -11,7 +11,7 @@ export const HeaderContainer = styled.header`
 
   nav {
     display: flex;
-    gap: 0.25rem;
+    gap: 0.5rem;
 
     a {
       /* width: 3rem; */
