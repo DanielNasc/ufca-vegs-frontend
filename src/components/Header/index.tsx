@@ -1,4 +1,4 @@
-import { Users, Wrench } from 'phosphor-react'
+import { UserPlus, Users } from 'phosphor-react'
 
 import { HeaderContainer } from './styles'
 
@@ -15,8 +15,8 @@ export function Header() {
           <Users size={24} />
           Contador
         </NavLink>
-        <NavLink to="/pei">
-          <Wrench size={24} /> link test
+        <NavLink to="/create">
+          <UserPlus size={24} /> Criar veg
         </NavLink>
       </nav>
     </HeaderContainer>

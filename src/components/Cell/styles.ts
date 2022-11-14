@@ -4,16 +4,20 @@ export const CellContainer = styled.td`
   height: 2rem;
   width: 4rem;
 
-  background-color: green;
-
   input {
     display: none;
   }
+`
 
-  label {
-    height: 100%;
-    width: 100%;
+export const CellLabel = styled.label`
+  height: 100%;
+  width: 100%;
 
-    display: inline-block;
+  display: inline-block;
+
+  background-color: ${(props) => props.theme['gray-700']};
+
+  &.active {
+    background-color: ${(props) => props.theme['green-500']};
   }
 `
