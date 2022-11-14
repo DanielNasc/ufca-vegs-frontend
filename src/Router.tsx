@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import { DefaultLayout } from './layouts/DefaultLayout'
 import { Home } from './pages/Home'
-import { Test } from './pages/test'
+import { Test } from './pages/CreateVeg'
 
 export function Router() {
   return (
