@@ -18,6 +18,9 @@ export function Header() {
         <NavLink to="/create">
           <UserPlus size={24} /> Criar veg
         </NavLink>
+        <NavLink to="/edit">
+          <UserPlus size={24} /> Criar veg
+        </NavLink>
       </nav>
     </HeaderContainer>
   )

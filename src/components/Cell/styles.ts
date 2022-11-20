@@ -13,7 +13,10 @@ export const CellLabel = styled.label`
   height: 100%;
   width: 100%;
 
+  border-radius: 8px;
+
   display: inline-block;
+  cursor: pointer;
 
   background-color: ${(props) => props.theme['gray-700']};
 
