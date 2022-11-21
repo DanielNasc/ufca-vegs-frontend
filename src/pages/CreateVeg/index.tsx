@@ -2,6 +2,7 @@
 import { UserPlus } from 'phosphor-react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Cell } from '../../components/Cell'
+import { api } from '../../services/api'
 import {
   CreateVegContainer,
   FormContainer,
@@ -29,8 +30,25 @@ const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
 export function CreateVeg() {
   const { register, handleSubmit } = useForm<CreateVegFormData>()
 
-  const handleCreateVeg: SubmitHandler<CreateVegFormData> = (values) => {
-    console.log(values)
+  const handleCreateVeg: SubmitHandler<CreateVegFormData> = async (values) => {
+    const body = {
+      card: values.card,
+      name: values.name,
+      schedule: [] as any[],
+    }
+
+    for (const day of DAYS) {
+      for (const meal of ['lunch', 'dinner'] as const) {
+        if (values[`${day}_${meal}`]) {
+          body.schedule.push({
+            day,
+            meal,
+          })
+        }
+      }
+    }
+
+    await api.post('/vegs/', body)
   }
 
   return (
