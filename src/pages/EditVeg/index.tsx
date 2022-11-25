@@ -1,3 +1,11 @@
+import { VegsList } from '../../components/VegsList'
+import { EditVegsContainer } from './styles'
+
 export function EditVeg() {
-  return <h1>Edit veg</h1>
+  return (
+    <EditVegsContainer>
+      <VegsList />
+      Hello
+    </EditVegsContainer>
+  )
 }

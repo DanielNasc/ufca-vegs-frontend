@@ -1,4 +1,4 @@
-import { UserPlus, Users } from 'phosphor-react'
+import { Pencil, UserPlus, Users } from 'phosphor-react'
 
 import { HeaderContainer } from './styles'
 
@@ -19,7 +19,7 @@ export function Header() {
           <UserPlus size={24} /> Criar veg
         </NavLink>
         <NavLink to="/edit">
-          <UserPlus size={24} /> Criar veg
+          <Pencil size={24} /> Editar Veg
         </NavLink>
       </nav>
     </HeaderContainer>
