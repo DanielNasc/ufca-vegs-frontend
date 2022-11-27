@@ -1,14 +1,10 @@
-// import { Cell } from '../../components/Cell'
-import { UserPlus } from 'phosphor-react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { Cell } from '../../components/Cell'
+import { UserPlus } from 'phosphor-react'
+
 import { api } from '../../services/api'
-import {
-  CreateVegContainer,
-  FormContainer,
-  Input,
-  SubmitFormButton,
-} from './styles'
+import { CreateVegContainer, FormContainer, Input } from './styles'
+import { Cell } from '../../components/Cell'
+import { SubmitFormButton } from '../../components/SubmitFormButton/styles'
 
 interface CreateVegFormData {
   card: string
@@ -28,7 +24,7 @@ interface CreateVegFormData {
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
 
 export function CreateVeg() {
-  const { register, handleSubmit } = useForm<CreateVegFormData>()
+  const { register, handleSubmit, reset } = useForm<CreateVegFormData>()
 
   const handleCreateVeg: SubmitHandler<CreateVegFormData> = async (values) => {
     const body = {
@@ -49,6 +45,7 @@ export function CreateVeg() {
     }
 
     await api.post('/vegs/', body)
+    reset()
   }
 
   return (

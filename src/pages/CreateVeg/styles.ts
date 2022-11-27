@@ -38,23 +38,3 @@ export const Input = styled.input`
     border-color: ${(props) => props.theme['green-500']};
   }
 `
-
-export const SubmitFormButton = styled.button`
-  width: 100%;
-  border: 0;
-  padding: 1rem;
-  border-radius: 8px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  gap: 0.5rem;
-
-  background: ${(props) => props.theme['green-500']};
-  color: ${(props) => props.theme['gray-100']};
-
-  &:hover {
-    background: ${(props) => props.theme['green-700']};
-  }
-`
