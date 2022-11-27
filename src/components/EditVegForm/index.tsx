@@ -1,7 +1,8 @@
 import { UserPlus } from 'phosphor-react'
 import { useContext } from 'react'
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { SelectedVegContext } from '../../contexts/SelectedVegContext'
+import { api } from '../../services/api'
 import { Cell } from '../Cell'
 import { SubmitFormButton } from '../SubmitFormButton/styles'
 import { EditVegFormContainer } from './styles'
@@ -9,12 +10,10 @@ import { EditVegFormContainer } from './styles'
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
 
 interface EditVegFormData {
-  card: string
   fri_dinner: boolean
   fri_lunch: boolean
   mon_dinner: boolean
   mon_lunch: boolean
-  name: string
   thu_dinner: boolean
   thu_lunch: boolean
   tue_dinner: boolean
@@ -24,39 +23,41 @@ interface EditVegFormData {
 }
 
 export function EditVegForm() {
-  const { register } = useForm<EditVegFormData>()
+  const { register, handleSubmit } = useForm<EditVegFormData>()
   const { selectedVeg } = useContext(SelectedVegContext)
-
-  // const handleCreateVeg: SubmitHandler<EditVegFormData> = async (values) => {
-  //   const body = {
-  //     card: values.card,
-  //     name: values.name,
-  //     schedule: [] as any[],
-  //   }
-
-  //   for (const day of DAYS) {
-  //     for (const meal of ['lunch', 'dinner'] as const) {
-  //       if (values[`${day}_${meal}`]) {
-  //         body.schedule.push({
-  //           day,
-  //           meal,
-  //         })
-  //       }
-  //     }
-  //   }
-
-  //   await api.post('/vegs/', body)
-  // }
 
   if (!selectedVeg) {
     return <h1>null</h1>
+  }
+
+  const handleCreateVeg: SubmitHandler<EditVegFormData> = async (values) => {
+    // const body = {
+    //   card: selectedVeg.card,
+    //   name: selectedVeg.name,
+    //   schedule: [] as any[],
+    // }
+
+    // for (const day of DAYS) {
+    //   for (const meal of ['lunch', 'dinner'] as const) {
+    //     if (values[`${day}_${meal}`]) {
+    //       body.schedule.push({
+    //         day,
+    //         meal,
+    //       })
+    //     }
+    //   }
+    // }
+
+    console.log(values)
+
+    // await api.post('/vegs/', body)
   }
 
   return (
     <EditVegFormContainer>
       <h2>{selectedVeg.name}</h2>
 
-      <form>
+      <form onSubmit={handleSubmit(handleCreateVeg)}>
         <table>
           <thead>
             <th>Seg</th>
@@ -69,13 +70,13 @@ export function EditVegForm() {
             <tr>
               {DAYS.map((day) => {
                 const code = `${day}_lunch` as keyof EditVegFormData
-                return <Cell key={code} {...register(code)} />
+                return <Cell key={code} fromContext {...register(code)} />
               })}
             </tr>
             <tr>
               {DAYS.map((day) => {
                 const code = `${day}_dinner` as keyof EditVegFormData
-                return <Cell key={code} {...register(code)} />
+                return <Cell key={code} fromContext {...register(code)} />
               })}
             </tr>
           </tbody>

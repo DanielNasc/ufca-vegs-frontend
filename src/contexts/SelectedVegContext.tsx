@@ -1,8 +1,17 @@
 import { createContext, ReactNode, useState } from 'react'
 
+type Days = 'mon' | 'tue' | 'wed' | 'thu' | 'fri'
+type ScheduleTable = {
+  [key in Days]: {
+    lunch: boolean
+    dinner: boolean
+  }
+}
+
 interface Veg {
   card: number
   name: string
+  scheduleTable: ScheduleTable
 }
 
 interface ISelectedVegContext {
