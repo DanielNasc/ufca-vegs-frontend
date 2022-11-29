@@ -12,6 +12,8 @@ export const SubmitFormButton = styled.button`
 
   gap: 0.5rem;
 
+  cursor: pointer;
+
   background: ${(props) => props.theme['green-500']};
   color: ${(props) => props.theme['gray-100']};
 

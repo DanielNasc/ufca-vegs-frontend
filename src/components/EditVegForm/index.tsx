@@ -2,10 +2,9 @@ import { UserPlus } from 'phosphor-react'
 import { useContext } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { SelectedVegContext } from '../../contexts/SelectedVegContext'
-import { api } from '../../services/api'
 import { Cell } from '../Cell'
 import { SubmitFormButton } from '../SubmitFormButton/styles'
-import { EditVegFormContainer } from './styles'
+import { EditVegContainer, EditVegForm } from './styles'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
 
@@ -22,12 +21,16 @@ interface EditVegFormData {
   wed_lunch: boolean
 }
 
-export function EditVegForm() {
+export function SelectedVeg() {
   const { register, handleSubmit } = useForm<EditVegFormData>()
   const { selectedVeg } = useContext(SelectedVegContext)
 
   if (!selectedVeg) {
-    return <h1>null</h1>
+    return (
+      <EditVegContainer>
+        <h1>Selecione um vegetariano</h1>
+      </EditVegContainer>
+    )
   }
 
   const handleCreateVeg: SubmitHandler<EditVegFormData> = async (values) => {
@@ -54,10 +57,10 @@ export function EditVegForm() {
   }
 
   return (
-    <EditVegFormContainer>
+    <EditVegContainer>
       <h2>{selectedVeg.name}</h2>
 
-      <form onSubmit={handleSubmit(handleCreateVeg)}>
+      <EditVegForm onSubmit={handleSubmit(handleCreateVeg)}>
         <table>
           <thead>
             <th>Seg</th>
@@ -86,7 +89,7 @@ export function EditVegForm() {
           <UserPlus size={24} />
           Criar
         </SubmitFormButton>
-      </form>
-    </EditVegFormContainer>
+      </EditVegForm>
+    </EditVegContainer>
   )
 }
