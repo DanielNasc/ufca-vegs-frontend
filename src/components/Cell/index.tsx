@@ -1,5 +1,4 @@
-import { forwardRef, useContext, useEffect, useState } from 'react'
-import { SelectedVegContext } from '../../contexts/SelectedVegContext'
+import { forwardRef } from 'react'
 import { CellContainer, CellLabel } from './styles'
 
 interface CellProps {
@@ -7,29 +6,31 @@ interface CellProps {
   fromContext?: boolean
 }
 
-type Days = 'mon' | 'tue' | 'wed' | 'thu' | 'fri'
+// type Days = 'mon' | 'tue' | 'wed' | 'thu' | 'fri'
 
 const Base = ({ name, fromContext, ...rest }: CellProps, ref: any) => {
-  const [isActive, setIsActive] = useState(false)
-  const { selectedVeg } = useContext(SelectedVegContext)
+  // const { selectedVeg } = useContext(SelectedVegContext)
 
-  useEffect(() => {
-    if (fromContext && selectedVeg) {
-      const [day, meal] = name.split('_')
-      setIsActive(
-        selectedVeg.scheduleTable[day as Days][meal as 'lunch' | 'dinner'],
-      )
-    }
-  }, [fromContext, selectedVeg, name])
+  // useEffect(() => {
+  //   if (fromContext && selectedVeg) {
+  //     const [day, meal] = name.split('_')
+  //     // setIsActive(
+  //     //   selectedVeg.scheduleTable[day as Days][meal as 'lunch' | 'dinner'],
+  //     // )
+  //   }
+  // }, [fromContext, selectedVeg, name])
 
   return (
     <CellContainer>
-      <CellLabel
-        htmlFor={name}
-        className={isActive ? 'active' : ''}
-        onClick={() => setIsActive((props) => !props)}
+      <input
+        type="checkbox"
+        name={name}
+        id={name}
+        {...rest}
+        ref={ref}
+        // checked={isActive}
       />
-      <input type="checkbox" name={name} id={name} {...rest} ref={ref} />
+      <CellLabel htmlFor={name} />
     </CellContainer>
   )
 }

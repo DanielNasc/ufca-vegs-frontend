@@ -20,7 +20,7 @@ export const CellLabel = styled.label`
 
   background-color: ${(props) => props.theme['gray-700']};
 
-  &.active {
+  input:checked + & {
     background-color: ${(props) => props.theme['green-500']};
   }
 `

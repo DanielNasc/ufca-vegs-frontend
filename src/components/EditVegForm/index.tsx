@@ -1,7 +1,8 @@
-import { UserPlus } from 'phosphor-react'
-import { useContext } from 'react'
+import { NotePencil } from 'phosphor-react'
+import { useContext, useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { SelectedVegContext } from '../../contexts/SelectedVegContext'
+import { api } from '../../services/api'
 import { Cell } from '../Cell'
 import { SubmitFormButton } from '../SubmitFormButton/styles'
 import { EditVegContainer, EditVegForm } from './styles'
@@ -21,9 +22,28 @@ interface EditVegFormData {
   wed_lunch: boolean
 }
 
+interface UnusualReservation {
+  card: number
+  day: string
+  meal: 'lunch' | 'dinner'
+  will_come: boolean
+}
+
 export function SelectedVeg() {
-  const { register, handleSubmit } = useForm<EditVegFormData>()
+  const { register, handleSubmit, reset } = useForm<EditVegFormData>()
   const { selectedVeg } = useContext(SelectedVegContext)
+
+  useEffect(() => {
+    const defaultValues = {} as any
+    for (const day of DAYS) {
+      for (const meal of ['lunch', 'dinner'] as const) {
+        defaultValues[`${day}_${meal}`] = selectedVeg
+          ? selectedVeg.scheduleTable[day][meal]
+          : false
+      }
+    }
+    reset({ ...defaultValues })
+  }, [selectedVeg, reset])
 
   if (!selectedVeg) {
     return (
@@ -34,26 +54,25 @@ export function SelectedVeg() {
   }
 
   const handleCreateVeg: SubmitHandler<EditVegFormData> = async (values) => {
-    // const body = {
-    //   card: selectedVeg.card,
-    //   name: selectedVeg.name,
-    //   schedule: [] as any[],
-    // }
+    const body = {
+      card: selectedVeg.card,
+      unusualReservations: [] as UnusualReservation[],
+    }
 
-    // for (const day of DAYS) {
-    //   for (const meal of ['lunch', 'dinner'] as const) {
-    //     if (values[`${day}_${meal}`]) {
-    //       body.schedule.push({
-    //         day,
-    //         meal,
-    //       })
-    //     }
-    //   }
-    // }
+    for (const day of DAYS) {
+      for (const meal of ['lunch', 'dinner'] as const) {
+        if (values[`${day}_${meal}`] !== selectedVeg.scheduleTable[day][meal]) {
+          body.unusualReservations.push({
+            card: selectedVeg.card,
+            day,
+            meal,
+            will_come: values[`${day}_${meal}`],
+          })
+        }
+      }
+    }
 
-    console.log(values)
-
-    // await api.post('/vegs/', body)
+    await api.post('/vegs/unusual', body)
   }
 
   return (
@@ -86,8 +105,8 @@ export function SelectedVeg() {
         </table>
 
         <SubmitFormButton>
-          <UserPlus size={24} />
-          Criar
+          <NotePencil size={24} />
+          Salvar
         </SubmitFormButton>
       </EditVegForm>
     </EditVegContainer>
