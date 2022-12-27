@@ -35,7 +35,10 @@ export function Item({ card, name }: ItemProps) {
 
   return (
     <ItemContainer
-      onClick={() => changeSelectedVeg({ card, name, scheduleTable })}
+      onClick={async () => {
+        await fetchVegs()
+        changeSelectedVeg({ card, name, scheduleTable })
+      }}
     >
       <h3>{name}</h3>
       <p>{card}</p>

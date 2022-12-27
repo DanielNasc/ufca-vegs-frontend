@@ -16,7 +16,7 @@ interface Veg {
 
 interface ISelectedVegContext {
   selectedVeg: Veg | null
-  changeSelectedVeg: (veg: Veg) => void
+  changeSelectedVeg: (veg: Veg | null) => void
 }
 
 export const SelectedVegContext = createContext<ISelectedVegContext>({
@@ -33,7 +33,7 @@ export function SelectedVegContextProvider({
 }: SelectedVegContextProviderProps) {
   const [selectedVeg, setSelectedVeg] = useState<Veg | null>(null)
 
-  function changeSelectedVeg(veg: Veg) {
+  function changeSelectedVeg(veg: Veg | null) {
     setSelectedVeg(veg)
   }
 

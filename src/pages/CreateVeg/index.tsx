@@ -23,6 +23,16 @@ interface CreateVegFormData {
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
 
+const RESET_VALUES = {} as CreateVegFormData
+
+for (const day of DAYS) {
+  for (const meal of ['lunch', 'dinner'] as const) {
+    RESET_VALUES[`${day}_${meal}`] = false
+  }
+}
+
+RESET_VALUES.name = RESET_VALUES.card = ''
+
 export function CreateVeg() {
   const { register, handleSubmit, reset } = useForm<CreateVegFormData>()
 
@@ -45,7 +55,8 @@ export function CreateVeg() {
     }
 
     await api.post('/vegs/', body)
-    reset()
+
+    reset(RESET_VALUES)
   }
 
   return (
@@ -53,7 +64,7 @@ export function CreateVeg() {
       <FormContainer onSubmit={handleSubmit(handleCreateVeg)}>
         <div className="inpt">
           <Input placeholder="Nome" {...register('name')} />
-          <Input placeholder="Card" type="number" {...register('card')} />
+          <Input placeholder="Cartão" type="number" {...register('card')} />
         </div>
 
         <table>
