@@ -22,7 +22,7 @@ export function Home() {
   useEffect(() => {
     fetchCounter()
 
-    socket.on('one passed', () => {
+    socket.on('decrement', () => {
       setCounter((old) => {
         if (old) {
           return old - 1
@@ -31,7 +31,7 @@ export function Home() {
       })
     })
 
-    socket.on('created', () => {
+    socket.on('increment', () => {
       setCounter((old) => {
         if (old != null) {
           return old + 1
@@ -45,8 +45,8 @@ export function Home() {
       fetchCounter()
     })
 
-    socket.on('counter cleaned', () => {
-      setCounter(null)
+    socket.on('cleaned', () => {
+      fetchCounter()
     })
   }, [])
 
