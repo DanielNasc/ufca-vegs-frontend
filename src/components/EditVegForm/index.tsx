@@ -53,6 +53,8 @@ export function SelectedVeg() {
     )
   }
 
+  const { changeSelectedVeg } = useContext(SelectedVegContext)
+
   const handleCreateVeg: SubmitHandler<EditVegFormData> = async (values) => {
     const body = {
       card: selectedVeg.card,
@@ -72,7 +74,25 @@ export function SelectedVeg() {
       }
     }
 
-    await api.post('/vegs/unusual', body)
+    const response = await api.post('/vegs/unusual', body)
+
+    if (response.status === 201) {
+      const newScheduleTable = structuredClone(selectedVeg.scheduleTable)
+      
+    for (const day of DAYS) {
+      for (const meal of ['lunch', 'dinner'] as const) {
+        newScheduleTable[day][meal] = values[`${day}_${meal}`] 
+
+      }
+    }
+      changeSelectedVeg({
+        card: selectedVeg.card,
+        name: selectedVeg.name,
+        scheduleTable: newScheduleTable
+      })
+
+      console.log("Nice")
+    }
   }
 
   return (
