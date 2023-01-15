@@ -6,6 +6,7 @@ import { api } from '../../services/api'
 import { Cell } from '../Cell'
 import { SubmitFormButton } from '../SubmitFormButton/styles'
 import { EditVegContainer, EditVegForm } from './styles'
+import { CheckboxInput } from './CheckboxInput'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
 
@@ -20,6 +21,7 @@ interface EditVegFormData {
   tue_lunch: boolean
   wed_dinner: boolean
   wed_lunch: boolean
+  is_permanent: boolean
 }
 
 interface UnusualReservation {
@@ -59,6 +61,7 @@ export function SelectedVeg() {
     const body = {
       card: selectedVeg.card,
       unusualReservations: [] as UnusualReservation[],
+      is_permanent: values.is_permanent
     }
 
     for (const day of DAYS) {
@@ -78,20 +81,19 @@ export function SelectedVeg() {
 
     if (response.status === 201) {
       const newScheduleTable = structuredClone(selectedVeg.scheduleTable)
-      
-    for (const day of DAYS) {
-      for (const meal of ['lunch', 'dinner'] as const) {
-        newScheduleTable[day][meal] = values[`${day}_${meal}`] 
 
+      for (const day of DAYS) {
+        for (const meal of ['lunch', 'dinner'] as const) {
+          newScheduleTable[day][meal] = values[`${day}_${meal}`]
+
+        }
       }
-    }
       changeSelectedVeg({
         card: selectedVeg.card,
         name: selectedVeg.name,
         scheduleTable: newScheduleTable
       })
 
-      console.log("Nice")
     }
   }
 
@@ -123,6 +125,11 @@ export function SelectedVeg() {
             </tr>
           </tbody>
         </table>
+
+        <CheckboxInput
+          label='É permanente?'
+          {...register('is_permanent')}
+        />
 
         <SubmitFormButton>
           <NotePencil size={24} />
