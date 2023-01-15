@@ -1,11 +1,12 @@
 import { NotePencil } from 'phosphor-react'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { SelectedVegContext } from '../../contexts/SelectedVegContext'
 import { api } from '../../services/api'
 import { Cell } from '../Cell'
 import { SubmitFormButton } from '../SubmitFormButton/styles'
 import { EditVegContainer, EditVegForm } from './styles'
+import { CheckboxInput } from './CheckboxInput'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
 
@@ -20,6 +21,7 @@ interface EditVegFormData {
   tue_lunch: boolean
   wed_dinner: boolean
   wed_lunch: boolean
+  is_permanent: boolean
 }
 
 interface UnusualReservation {
@@ -32,6 +34,8 @@ interface UnusualReservation {
 export function SelectedVeg() {
   const { register, handleSubmit, reset } = useForm<EditVegFormData>()
   const { selectedVeg } = useContext(SelectedVegContext)
+
+  const [lastChangeWasPermanent, setLastChangeWasPermanent] = useState(false)
 
   useEffect(() => {
     const defaultValues = {} as any
@@ -53,15 +57,18 @@ export function SelectedVeg() {
     )
   }
 
+  const { changeSelectedVeg } = useContext(SelectedVegContext)
+
   const handleCreateVeg: SubmitHandler<EditVegFormData> = async (values) => {
     const body = {
       card: selectedVeg.card,
       unusualReservations: [] as UnusualReservation[],
+      is_permanent: values.is_permanent
     }
 
     for (const day of DAYS) {
       for (const meal of ['lunch', 'dinner'] as const) {
-        if (values[`${day}_${meal}`] !== selectedVeg.scheduleTable[day][meal]) {
+        if (values[`${day}_${meal}`] !== selectedVeg.scheduleTable[day][meal] || values.is_permanent != lastChangeWasPermanent) {
           body.unusualReservations.push({
             card: selectedVeg.card,
             day,
@@ -72,7 +79,25 @@ export function SelectedVeg() {
       }
     }
 
-    await api.post('/vegs/unusual', body)
+    const response = await api.post('/vegs/unusual', body)
+
+    if (response.status === 201) {
+      const newScheduleTable = structuredClone(selectedVeg.scheduleTable)
+
+      for (const day of DAYS) {
+        for (const meal of ['lunch', 'dinner'] as const) {
+          newScheduleTable[day][meal] = values[`${day}_${meal}`]
+
+        }
+      }
+      changeSelectedVeg({
+        card: selectedVeg.card,
+        name: selectedVeg.name,
+        scheduleTable: newScheduleTable
+      })
+
+      setLastChangeWasPermanent(values.is_permanent)
+    }
   }
 
   return (
@@ -103,6 +128,11 @@ export function SelectedVeg() {
             </tr>
           </tbody>
         </table>
+
+        <CheckboxInput
+          label='É permanente?'
+          {...register('is_permanent')}
+        />
 
         <SubmitFormButton>
           <NotePencil size={24} />
