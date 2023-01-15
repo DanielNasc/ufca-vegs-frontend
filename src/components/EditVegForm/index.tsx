@@ -1,5 +1,5 @@
 import { NotePencil } from 'phosphor-react'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { SelectedVegContext } from '../../contexts/SelectedVegContext'
 import { api } from '../../services/api'
@@ -35,6 +35,8 @@ export function SelectedVeg() {
   const { register, handleSubmit, reset } = useForm<EditVegFormData>()
   const { selectedVeg } = useContext(SelectedVegContext)
 
+  const [lastChangeWasPermanent, setLastChangeWasPermanent] = useState(false)
+
   useEffect(() => {
     const defaultValues = {} as any
     for (const day of DAYS) {
@@ -66,7 +68,7 @@ export function SelectedVeg() {
 
     for (const day of DAYS) {
       for (const meal of ['lunch', 'dinner'] as const) {
-        if (values[`${day}_${meal}`] !== selectedVeg.scheduleTable[day][meal]) {
+        if (values[`${day}_${meal}`] !== selectedVeg.scheduleTable[day][meal] || values.is_permanent != lastChangeWasPermanent) {
           body.unusualReservations.push({
             card: selectedVeg.card,
             day,
@@ -94,6 +96,7 @@ export function SelectedVeg() {
         scheduleTable: newScheduleTable
       })
 
+      setLastChangeWasPermanent(values.is_permanent)
     }
   }
 
