@@ -6,6 +6,7 @@ import { ListContainer } from './sytles'
 interface Veg {
   name: string
   card: number
+  absences: number
 }
 
 export function VegsList() {
@@ -23,7 +24,7 @@ export function VegsList() {
   return (
     <ListContainer>
       {allVegs.map((veg) => (
-        <Item key={veg.card} name={veg.name} card={veg.card} />
+        <Item key={veg.card} name={veg.name} card={veg.card} absences={veg.absences} />
       ))}
     </ListContainer>
   )

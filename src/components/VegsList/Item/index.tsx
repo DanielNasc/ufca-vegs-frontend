@@ -6,6 +6,7 @@ import { ItemContainer } from './styles'
 interface ItemProps {
   name: string
   card: number
+  absences: number
 }
 
 type Days = 'mon' | 'tue' | 'wed' | 'thu' | 'fri'
@@ -16,7 +17,7 @@ type ScheduleTable = {
   }
 }
 
-export function Item({ card, name }: ItemProps) {
+export function Item({ card, name, absences = 0 }: ItemProps) {
   const [scheduleTable, setScheduleTable] = useState<ScheduleTable | null>(null)
   const { changeSelectedVeg } = useContext(SelectedVegContext)
 
@@ -42,6 +43,7 @@ export function Item({ card, name }: ItemProps) {
     >
       <h3>{name}</h3>
       <p>{card}</p>
+      <i>faltas: {absences}</i>
     </ItemContainer>
   )
 }
