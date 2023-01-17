@@ -5,6 +5,8 @@ import { api } from '../../services/api'
 import { CreateVegContainer, FormContainer, Input } from './styles'
 import { Cell } from '../../components/Cell'
 import { SubmitFormButton } from '../../components/SubmitFormButton/styles'
+import { toast } from 'react-toastify'
+import { AxiosError } from 'axios'
 
 interface CreateVegFormData {
   card: string
@@ -34,7 +36,7 @@ for (const day of DAYS) {
 RESET_VALUES.name = RESET_VALUES.card = ''
 
 export function CreateVeg() {
-  const { register, handleSubmit, reset } = useForm<CreateVegFormData>()
+  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<CreateVegFormData>()
 
   const handleCreateVeg: SubmitHandler<CreateVegFormData> = async (values) => {
     const body = {
@@ -54,7 +56,20 @@ export function CreateVeg() {
       }
     }
 
-    await api.post('/vegs/', body)
+    try {
+      const response = await api.post('/vegs/', body)
+
+      if (response.status === 201) toast.success('🥦 Usuário criado 🥦')
+      else toast.error(`[${response.status}] - ${response.data.message}`)
+    } catch (e) {
+      if (!(e instanceof AxiosError) || !e.response) {
+        toast.error("Ocorreu um erro não identificado")
+        return
+      }
+
+      const { response } = e
+      toast.error(`[${response.status}] - ${response.data.message}`)
+    }
 
     reset(RESET_VALUES)
   }
@@ -91,7 +106,7 @@ export function CreateVeg() {
           </tbody>
         </table>
 
-        <SubmitFormButton type="submit">
+        <SubmitFormButton type="submit" disabled={isSubmitting} >
           <UserPlus size={24} />
           Criar
         </SubmitFormButton>

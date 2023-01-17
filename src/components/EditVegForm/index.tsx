@@ -8,6 +8,7 @@ import { SubmitFormButton } from '../SubmitFormButton/styles'
 import { EditVegContainer, EditVegForm } from './styles'
 import { CheckboxInput } from './CheckboxInput'
 import { toast, ToastContainer } from 'react-toastify'
+import { AxiosError } from 'axios'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
 
@@ -86,7 +87,7 @@ export function SelectedVeg() {
       const response = await api.post('/vegs/unusual', body)
 
       if (response.status === 201) {
-        toast.success("🥦 Vegetariano Atualizado! 🥦")
+        toast.success("🥦 Usuário Atualizado! 🥦")
         const newScheduleTable = structuredClone(selectedVeg.scheduleTable)
 
         for (const day of DAYS) {
@@ -103,12 +104,17 @@ export function SelectedVeg() {
 
         setLastChangeWasPermanent(values.is_permanent)
       } else {
-        toast.error("Algo deu errado")
+        toast.error(`[${response.status}] - ${response.data.message}`)
       }
     }
     catch (e) {
-      toast.error("Algo deu errado")
+      if (!(e instanceof AxiosError) || !e.response) {
+        toast.error("Ocorreu um erro não identificado")
+        return
+      }
 
+      const { response } = e
+      toast.error(`[${response.status}] - ${response.data.message}`)
     }
   }
 
