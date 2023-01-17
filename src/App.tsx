@@ -1,5 +1,4 @@
 import { BrowserRouter } from 'react-router-dom'
-import { ToastContainer } from 'react-toastify'
 import { ThemeProvider } from 'styled-components'
 import { SelectedVegContextProvider } from './contexts/SelectedVegContext'
 
@@ -8,6 +7,7 @@ import { GlobalStyle } from './styles/global'
 import { defaultTheme } from './styles/themes/default'
 
 import "react-toastify/dist/ReactToastify.css"
+import { CustomToastContainer } from './components/CustomToastContainer'
 
 export function App() {
   return (
@@ -16,14 +16,13 @@ export function App() {
         <ThemeProvider theme={defaultTheme}>
           <Router />
           <GlobalStyle />
-          <ToastContainer
+          <CustomToastContainer
             position='top-right'
             autoClose={3000}
             hideProgressBar={false}
             closeOnClick
             pauseOnFocusLoss
             draggable
-            theme='dark'
             rtl={false}
             newestOnTop={false}
 

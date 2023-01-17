@@ -80,27 +80,35 @@ export function SelectedVeg() {
       }
     }
 
-    const response = await api.post('/vegs/unusual', body)
+    if (!body.unusualReservations.length) return
 
-    if (response.status === 201) {
-      toast.success("🥦 Vegetariano Atualizado! 🥦")
-      const newScheduleTable = structuredClone(selectedVeg.scheduleTable)
+    try {
+      const response = await api.post('/vegs/unusual', body)
 
-      for (const day of DAYS) {
-        for (const meal of ['lunch', 'dinner'] as const) {
-          newScheduleTable[day][meal] = values[`${day}_${meal}`]
+      if (response.status === 201) {
+        toast.success("🥦 Vegetariano Atualizado! 🥦")
+        const newScheduleTable = structuredClone(selectedVeg.scheduleTable)
 
+        for (const day of DAYS) {
+          for (const meal of ['lunch', 'dinner'] as const) {
+            newScheduleTable[day][meal] = values[`${day}_${meal}`]
+
+          }
         }
-      }
-      changeSelectedVeg({
-        card: selectedVeg.card,
-        name: selectedVeg.name,
-        scheduleTable: newScheduleTable
-      })
+        changeSelectedVeg({
+          card: selectedVeg.card,
+          name: selectedVeg.name,
+          scheduleTable: newScheduleTable
+        })
 
-      setLastChangeWasPermanent(values.is_permanent)
-    } else {
-      toast.error("🍅 Algo deu errado... 🍅")
+        setLastChangeWasPermanent(values.is_permanent)
+      } else {
+        toast.error("Algo deu errado")
+      }
+    }
+    catch (e) {
+      toast.error("Algo deu errado")
+
     }
   }
 
