@@ -17,7 +17,12 @@ export const SubmitFormButton = styled.button`
   background: ${(props) => props.theme['green-500']};
   color: ${(props) => props.theme['gray-100']};
 
-  &:hover {
+  &:not(:disabled):hover {
     background: ${(props) => props.theme['green-700']};
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    filter: brightness(.7);
   }
 `

@@ -7,6 +7,7 @@ import { Cell } from '../Cell'
 import { SubmitFormButton } from '../SubmitFormButton/styles'
 import { EditVegContainer, EditVegForm } from './styles'
 import { CheckboxInput } from './CheckboxInput'
+import { toast, ToastContainer } from 'react-toastify'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
 
@@ -32,7 +33,7 @@ interface UnusualReservation {
 }
 
 export function SelectedVeg() {
-  const { register, handleSubmit, reset } = useForm<EditVegFormData>()
+  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<EditVegFormData>()
   const { selectedVeg } = useContext(SelectedVegContext)
 
   const [lastChangeWasPermanent, setLastChangeWasPermanent] = useState(false)
@@ -82,6 +83,7 @@ export function SelectedVeg() {
     const response = await api.post('/vegs/unusual', body)
 
     if (response.status === 201) {
+      toast.success("🥦 Vegetariano Atualizado! 🥦")
       const newScheduleTable = structuredClone(selectedVeg.scheduleTable)
 
       for (const day of DAYS) {
@@ -97,6 +99,8 @@ export function SelectedVeg() {
       })
 
       setLastChangeWasPermanent(values.is_permanent)
+    } else {
+      toast.error("🍅 Algo deu errado... 🍅")
     }
   }
 
@@ -134,7 +138,9 @@ export function SelectedVeg() {
           {...register('is_permanent')}
         />
 
-        <SubmitFormButton>
+        <SubmitFormButton
+          disabled={isSubmitting}
+        >
           <NotePencil size={24} />
           Salvar
         </SubmitFormButton>
