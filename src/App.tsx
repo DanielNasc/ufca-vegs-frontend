@@ -8,27 +8,30 @@ import { defaultTheme } from './styles/themes/default'
 
 import "react-toastify/dist/ReactToastify.css"
 import { CustomToastContainer } from './components/CustomToastContainer'
+import { AuthProvider } from './contexts/AuthContext'
 
 export function App() {
   return (
-    <SelectedVegContextProvider>
-      <BrowserRouter>
-        <ThemeProvider theme={defaultTheme}>
-          <Router />
-          <GlobalStyle />
-          <CustomToastContainer
-            position='top-right'
-            autoClose={3000}
-            hideProgressBar={false}
-            closeOnClick
-            pauseOnFocusLoss
-            draggable
-            rtl={false}
-            newestOnTop={false}
+    <AuthProvider>
+      <SelectedVegContextProvider>
+        <BrowserRouter>
+          <ThemeProvider theme={defaultTheme}>
+            <Router />
+            <GlobalStyle />
+            <CustomToastContainer
+              position='top-right'
+              autoClose={3000}
+              hideProgressBar={false}
+              closeOnClick
+              pauseOnFocusLoss
+              draggable
+              rtl={false}
+              newestOnTop={false}
 
-          />
-        </ThemeProvider>
-      </BrowserRouter>
-    </SelectedVegContextProvider>
+            />
+          </ThemeProvider>
+        </BrowserRouter>
+      </SelectedVegContextProvider>
+    </AuthProvider>
   )
 }

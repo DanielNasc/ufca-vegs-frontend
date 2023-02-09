@@ -4,8 +4,12 @@ import { HeaderContainer } from './styles'
 
 import LOGO_IMG from '../../assets/ufca_logo.png'
 import { NavLink } from 'react-router-dom'
+import { useContext } from 'react'
+import { AuthContext } from '../../contexts/AuthContext'
 
 export function Header() {
+  const authContext = useContext(AuthContext);
+
   return (
     <HeaderContainer>
       <img src={LOGO_IMG} alt="Brasão da UFCA" />
@@ -15,12 +19,18 @@ export function Header() {
           <Users size={24} />
           Contador
         </NavLink>
-        <NavLink to="/create">
-          <UserPlus size={24} /> Criar veg
-        </NavLink>
-        <NavLink to="/edit">
-          <Pencil size={24} /> Editar Veg
-        </NavLink>
+        {
+          authContext.isAuthenticated &&
+          <>
+
+            <NavLink to="/create">
+              <UserPlus size={24} /> Criar veg
+            </NavLink>
+            <NavLink to="/edit">
+              <Pencil size={24} /> Editar Veg
+            </NavLink>
+          </>
+        }
       </nav>
     </HeaderContainer>
   )
