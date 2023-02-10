@@ -12,9 +12,9 @@ import { AuthProvider } from './contexts/AuthContext'
 
 export function App() {
   return (
-    <AuthProvider>
-      <SelectedVegContextProvider>
-        <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
+        <SelectedVegContextProvider>
           <ThemeProvider theme={defaultTheme}>
             <Router />
             <GlobalStyle />
@@ -30,8 +30,8 @@ export function App() {
 
             />
           </ThemeProvider>
-        </BrowserRouter>
-      </SelectedVegContextProvider>
-    </AuthProvider>
+        </SelectedVegContextProvider>
+      </AuthProvider>
+    </BrowserRouter>
   )
 }

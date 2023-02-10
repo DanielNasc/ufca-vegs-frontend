@@ -3,6 +3,7 @@ import { DefaultLayout } from './layouts/DefaultLayout'
 import { Home } from './pages/Home'
 import { CreateVeg } from './pages/CreateVeg'
 import { EditVeg } from './pages/EditVeg'
+import { Login } from './pages/Login'
 
 export function Router() {
   return (
@@ -11,6 +12,7 @@ export function Router() {
         <Route path="/" element={<Home />} />
         <Route path="/create" element={<CreateVeg />} />
         <Route path="/edit" element={<EditVeg />} />
+        <Route path='/login' element={<Login />} />
       </Route>
     </Routes>
   )

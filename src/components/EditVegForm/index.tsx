@@ -7,8 +7,9 @@ import { Cell } from '../Cell'
 import { SubmitFormButton } from '../SubmitFormButton/styles'
 import { EditVegContainer, EditVegForm } from './styles'
 import { CheckboxInput } from './CheckboxInput'
-import { toast, ToastContainer } from 'react-toastify'
+import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
+import { AuthContext } from '../../contexts/AuthContext'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
 
@@ -36,6 +37,7 @@ interface UnusualReservation {
 export function SelectedVeg() {
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<EditVegFormData>()
   const { selectedVeg } = useContext(SelectedVegContext)
+  const { signOut } = useContext(AuthContext)
 
   const [lastChangeWasPermanent, setLastChangeWasPermanent] = useState(false)
 
@@ -85,6 +87,7 @@ export function SelectedVeg() {
 
     try {
       const response = await api.post('/vegs/unusual', body)
+      console.log(response.status)
 
       if (response.status === 201) {
         toast.success("🥦 Usuário Atualizado! 🥦")
@@ -115,6 +118,8 @@ export function SelectedVeg() {
 
       const { response } = e
       toast.error(`[${response.status}] - ${response.data.message}`)
+
+      if (response.status === 401) signOut()
     }
   }
 

@@ -1,4 +1,4 @@
-import { Pencil, UserPlus, Users } from 'phosphor-react'
+import { Pencil, UserPlus, Users, Lock } from 'phosphor-react'
 
 import { HeaderContainer } from './styles'
 
@@ -20,16 +20,20 @@ export function Header() {
           Contador
         </NavLink>
         {
-          authContext.isAuthenticated &&
-          <>
+          authContext.isAuthenticated ?
+            <>
 
-            <NavLink to="/create">
-              <UserPlus size={24} /> Criar veg
+              <NavLink to="/create">
+                <UserPlus size={24} /> Criar veg
+              </NavLink>
+              <NavLink to="/edit">
+                <Pencil size={24} /> Editar Veg
+              </NavLink>
+            </>
+            :
+            <NavLink to="/login">
+              <Lock size={24} /> Logar
             </NavLink>
-            <NavLink to="/edit">
-              <Pencil size={24} /> Editar Veg
-            </NavLink>
-          </>
         }
       </nav>
     </HeaderContainer>

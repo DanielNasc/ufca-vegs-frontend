@@ -7,6 +7,9 @@ import { Cell } from '../../components/Cell'
 import { SubmitFormButton } from '../../components/SubmitFormButton/styles'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
+import { useContext } from 'react'
+import { AuthContext } from '../../contexts/AuthContext'
+import { Navigate } from 'react-router-dom'
 
 interface CreateVegFormData {
   card: string
@@ -36,6 +39,10 @@ for (const day of DAYS) {
 RESET_VALUES.name = RESET_VALUES.card = ''
 
 export function CreateVeg() {
+  const { isAuthenticated, signOut } = useContext(AuthContext)
+
+  if (!isAuthenticated) return <Navigate to="/" />
+
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<CreateVegFormData>()
 
   const handleCreateVeg: SubmitHandler<CreateVegFormData> = async (values) => {
@@ -61,6 +68,7 @@ export function CreateVeg() {
 
       if (response.status === 201) toast.success('🥦 Usuário criado 🥦')
       else toast.error(`[${response.status}] - ${response.data.message}`)
+
     } catch (e) {
       if (!(e instanceof AxiosError) || !e.response) {
         toast.error("Ocorreu um erro não identificado")
@@ -69,6 +77,8 @@ export function CreateVeg() {
 
       const { response } = e
       toast.error(`[${response.status}] - ${response.data.message}`)
+
+      if (response.status === 401) signOut()
     }
 
     reset(RESET_VALUES)
