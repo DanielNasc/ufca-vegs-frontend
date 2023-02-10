@@ -1,6 +1,6 @@
-import { Pencil, UserPlus, Users, Lock } from 'phosphor-react'
+import { Pencil, UserPlus, Users, Lock, UserCircle } from 'phosphor-react'
 
-import { HeaderContainer } from './styles'
+import { HeaderContainer, ProfilePicContainer } from './styles'
 
 import LOGO_IMG from '../../assets/ufca_logo.png'
 import { NavLink } from 'react-router-dom'
@@ -8,11 +8,18 @@ import { useContext } from 'react'
 import { AuthContext } from '../../contexts/AuthContext'
 
 export function Header() {
-  const authContext = useContext(AuthContext);
+  const { isAuthenticated, signOut } = useContext(AuthContext);
 
   return (
     <HeaderContainer>
-      <img src={LOGO_IMG} alt="Brasão da UFCA" />
+      {
+        isAuthenticated ?
+
+          <ProfilePicContainer onClick={() => signOut()}>
+            <img src={import.meta.env.VITE_ADM_PIC} alt="" />
+          </ProfilePicContainer> :
+          <UserCircle size="4rem" />
+      }
 
       <nav>
         <NavLink to="/">
@@ -20,7 +27,7 @@ export function Header() {
           Contador
         </NavLink>
         {
-          authContext.isAuthenticated ?
+          isAuthenticated ?
             <>
 
               <NavLink to="/create">
