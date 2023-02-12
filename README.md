@@ -63,3 +63,15 @@ querer.
 - ver quantas pessoas faltam comer;
 - adicionar um usuário e suas reservas;
 - editar as reservas de um usuário (temporariamente ou permanentemente).
+
+## Screenshots
+
+![home](./.github/home.png)
+![create](./.github/create.png)
+![edit](./.github/edit.png)
+
+### Responsividade
+
+![home_res](./.github/responsive_counter.jpg)
+![create_res](./.github/responsive_create_veg.jpeg)
+![edit_res](./.github/responsive_edit_vegs.jpeg)
