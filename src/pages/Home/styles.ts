@@ -7,14 +7,17 @@ export const HomeContainer = styled.main`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: 768px) {
+    padding: 5rem 0;
+
+    justify-content: flex-start;
+  }
 `
 
-export const CountdownConatiner = styled.div`
+export const CountdownContainer = styled.div`
   font-family: 'Roboto Mono', monospace;
   font-size: 10rem;
-  line-height: 8rem;
-
-  color: ${(props) => props.theme['gray-100']};
 
   display: flex;
   gap: 1rem;
@@ -23,5 +26,13 @@ export const CountdownConatiner = styled.div`
     background: ${(props) => props.theme['gray-700']};
     padding: 2rem 1rem;
     border-radius: 8px;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 5rem;
+
+    span {
+      padding: 1rem 0.5rem;
+    }
   }
 `

@@ -14,28 +14,35 @@ export const HeaderContainer = styled.header`
     gap: 0.5rem;
 
     a {
-      /* width: 3rem; */
-      height: 3rem;
-      gap: 0.25rem;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      color: ${(props) => props.theme['gray-100']};
-
-      border-top: 3px solid transparent;
-      border-bottom: 3px solid transparent;
-
-      text-decoration: none;
-
-      &:hover {
-        border-bottom: 3px solid ${(props) => props.theme['green-500']};
-      }
-
       &.active {
         color: ${(props) => props.theme['green-500']};
       }
+      &:hover {
+        border-bottom: 3px solid ${(props) => props.theme['green-500']};
+      }
+    }
+  }
+
+  a {
+    /* width: 3rem; */
+    height: 3rem;
+    gap: 0.25rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: ${(props) => props.theme['gray-100']};
+
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    nav {
+      display: none;
     }
   }
 `
@@ -53,7 +60,14 @@ const gradient = keyframes`
 `
 
 export const ProfilePicContainer = styled.div`
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23d5ab, #fcd512, #f0d805);
+  background: linear-gradient(
+    -45deg,
+    #ee7752,
+    #e73c7e,
+    #23d5ab,
+    #fcd512,
+    #f0d805
+  );
   background-size: 400% 400%;
   animation: ${gradient} 5s ease infinite;
 
@@ -68,10 +82,10 @@ export const ProfilePicContainer = styled.div`
   justify-content: center;
 
   img {
-      height: 3rem;
-      width: 3rem;
+    height: 3rem;
+    width: 3rem;
 
-      border: 1px solid black;
-      border-radius: 999999px;
-    }
+    border: 1px solid black;
+    border-radius: 999999px;
+  }
 `

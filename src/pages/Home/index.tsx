@@ -1,4 +1,4 @@
-import { CountdownConatiner, HomeContainer } from './styles'
+import { CountdownContainer, HomeContainer } from './styles'
 import io from 'socket.io-client'
 import { useEffect, useState } from 'react'
 
@@ -52,14 +52,14 @@ export function Home() {
 
   return (
     <HomeContainer>
-      <CountdownConatiner>
+      <CountdownContainer>
         {String(counter)
           .padStart(4, '0')
           .split('')
           .map((char, i) => (
             <span key={i}>{char}</span>
           ))}
-      </CountdownConatiner>
+      </CountdownContainer>
     </HomeContainer>
   )
 }
