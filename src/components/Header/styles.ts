@@ -16,8 +16,6 @@ export const HeaderContainer = styled.header`
     a {
       &.active {
         color: ${(props) => props.theme['green-500']};
-      }
-      &:hover {
         border-bottom: 3px solid ${(props) => props.theme['green-500']};
       }
     }
@@ -41,7 +39,7 @@ export const HeaderContainer = styled.header`
   }
 
   @media (max-width: 768px) {
-    nav {
+    nav a:not(.active) span {
       display: none;
     }
   }

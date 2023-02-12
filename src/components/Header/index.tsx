@@ -34,20 +34,20 @@ export function Header() {
       <nav>
         <NavLink to="/">
           <Users size={24} />
-          Contador
+          <span>Contador</span>
         </NavLink>
         {isAuthenticated ? (
           <>
             <NavLink to="/create">
-              <UserPlus size={24} /> Criar veg
+              <UserPlus size={24} /> <span>Criar veg</span>
             </NavLink>
             <NavLink to="/edit">
-              <Pencil size={24} /> Editar Veg
+              <Pencil size={24} /> <span>Editar Veg</span>
             </NavLink>
           </>
         ) : (
           <NavLink to="/login">
-            <Lock size={24} /> Logar
+            <Lock size={24} /> <span>Logar</span>
           </NavLink>
         )}
       </nav>

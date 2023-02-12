@@ -24,7 +24,12 @@ export function VegsList() {
   return (
     <ListContainer>
       {allVegs.map((veg) => (
-        <Item key={veg.card} name={veg.name} card={veg.card} absences={veg.absences} />
+        <Item
+          key={veg.card}
+          name={veg.name}
+          card={veg.card}
+          absences={veg.absences}
+        />
       ))}
     </ListContainer>
   )

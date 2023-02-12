@@ -6,7 +6,7 @@ import { Router } from './Router'
 import { GlobalStyle } from './styles/global'
 import { defaultTheme } from './styles/themes/default'
 
-import "react-toastify/dist/ReactToastify.css"
+import 'react-toastify/dist/ReactToastify.css'
 import { CustomToastContainer } from './components/CustomToastContainer'
 import { AuthProvider } from './contexts/AuthContext'
 
@@ -19,7 +19,7 @@ export function App() {
             <Router />
             <GlobalStyle />
             <CustomToastContainer
-              position='top-right'
+              position="top-right"
               autoClose={3000}
               hideProgressBar={false}
               closeOnClick
@@ -27,7 +27,6 @@ export function App() {
               draggable
               rtl={false}
               newestOnTop={false}
-
             />
           </ThemeProvider>
         </SelectedVegContextProvider>

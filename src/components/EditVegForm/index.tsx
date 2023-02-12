@@ -35,11 +35,17 @@ interface UnusualReservation {
 }
 
 export function SelectedVeg() {
-  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<EditVegFormData>()
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<EditVegFormData>()
   const { selectedVeg } = useContext(SelectedVegContext)
   const { signOut } = useContext(AuthContext)
 
   const [lastChangeWasPermanent, setLastChangeWasPermanent] = useState(false)
+  const { changeSelectedVeg } = useContext(SelectedVegContext)
 
   useEffect(() => {
     const defaultValues = {} as any
@@ -61,18 +67,19 @@ export function SelectedVeg() {
     )
   }
 
-  const { changeSelectedVeg } = useContext(SelectedVegContext)
-
   const handleCreateVeg: SubmitHandler<EditVegFormData> = async (values) => {
     const body = {
       card: selectedVeg.card,
       unusualReservations: [] as UnusualReservation[],
-      is_permanent: values.is_permanent
+      is_permanent: values.is_permanent,
     }
 
     for (const day of DAYS) {
       for (const meal of ['lunch', 'dinner'] as const) {
-        if (values[`${day}_${meal}`] !== selectedVeg.scheduleTable[day][meal] || values.is_permanent != lastChangeWasPermanent) {
+        if (
+          values[`${day}_${meal}`] !== selectedVeg.scheduleTable[day][meal] ||
+          values.is_permanent !== lastChangeWasPermanent
+        ) {
           body.unusualReservations.push({
             card: selectedVeg.card,
             day,
@@ -90,29 +97,27 @@ export function SelectedVeg() {
       console.log(response.status)
 
       if (response.status === 201) {
-        toast.success("🥦 Usuário Atualizado! 🥦")
+        toast.success('🥦 Usuário Atualizado! 🥦')
         const newScheduleTable = structuredClone(selectedVeg.scheduleTable)
 
         for (const day of DAYS) {
           for (const meal of ['lunch', 'dinner'] as const) {
             newScheduleTable[day][meal] = values[`${day}_${meal}`]
-
           }
         }
         changeSelectedVeg({
           card: selectedVeg.card,
           name: selectedVeg.name,
-          scheduleTable: newScheduleTable
+          scheduleTable: newScheduleTable,
         })
 
         setLastChangeWasPermanent(values.is_permanent)
       } else {
         toast.error(`[${response.status}] - ${response.data.message}`)
       }
-    }
-    catch (e) {
+    } catch (e) {
       if (!(e instanceof AxiosError) || !e.response) {
-        toast.error("Ocorreu um erro não identificado")
+        toast.error('Ocorreu um erro não identificado')
         return
       }
 
@@ -152,14 +157,9 @@ export function SelectedVeg() {
           </tbody>
         </table>
 
-        <CheckboxInput
-          label='É permanente?'
-          {...register('is_permanent')}
-        />
+        <CheckboxInput label="É permanente?" {...register('is_permanent')} />
 
-        <SubmitFormButton
-          disabled={isSubmitting}
-        >
+        <SubmitFormButton disabled={isSubmitting}>
           <NotePencil size={24} />
           Salvar
         </SubmitFormButton>

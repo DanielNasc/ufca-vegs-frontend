@@ -11,4 +11,6 @@ export const ListContainer = styled.aside`
 
   border-radius: 16px 0 0 16px;
   background-color: ${(props) => props.theme['gray-700']};
+
+  grid-area: veglist;
 `

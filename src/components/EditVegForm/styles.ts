@@ -8,6 +8,12 @@ export const EditVegContainer = styled.div`
   justify-content: center;
 
   gap: 2rem;
+
+  grid-area: veginfo;
+
+  @media (max-width: 800px) {
+    margin-bottom: 1rem;
+  }
 `
 
 export const EditVegForm = styled.form`
