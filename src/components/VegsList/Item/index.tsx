@@ -43,7 +43,7 @@ export function Item({ card, name, absences = 0 }: ItemProps) {
     >
       <h3>{name}</h3>
       <p>{card}</p>
-      <i>faltas: {absences}</i>
+      <p>{absences} falta(s)</p>
     </ItemContainer>
   )
 }

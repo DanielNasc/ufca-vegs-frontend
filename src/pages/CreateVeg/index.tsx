@@ -40,10 +40,14 @@ RESET_VALUES.name = RESET_VALUES.card = ''
 
 export function CreateVeg() {
   const { isAuthenticated, signOut } = useContext(AuthContext)
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<CreateVegFormData>()
 
   if (!isAuthenticated) return <Navigate to="/" />
-
-  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<CreateVegFormData>()
 
   const handleCreateVeg: SubmitHandler<CreateVegFormData> = async (values) => {
     const body = {
@@ -68,10 +72,9 @@ export function CreateVeg() {
 
       if (response.status === 201) toast.success('🥦 Usuário criado 🥦')
       else toast.error(`[${response.status}] - ${response.data.message}`)
-
     } catch (e) {
       if (!(e instanceof AxiosError) || !e.response) {
-        toast.error("Ocorreu um erro não identificado")
+        toast.error('Ocorreu um erro não identificado')
         return
       }
 
@@ -116,7 +119,7 @@ export function CreateVeg() {
           </tbody>
         </table>
 
-        <SubmitFormButton type="submit" disabled={isSubmitting} >
+        <SubmitFormButton type="submit" disabled={isSubmitting}>
           <UserPlus size={24} />
           Criar
         </SubmitFormButton>
