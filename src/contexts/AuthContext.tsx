@@ -1,28 +1,27 @@
-import { createContext, useEffect, useState } from "react";
-import { redirect } from "react-router-dom";
-import { api } from "../services/api";
+import { createContext, useEffect, useState, ReactNode } from 'react'
+import { api } from '../services/api'
 
 interface User {
-  name: string;
-  email: string;
+  name: string
+  email: string
 }
 
 interface ICredentials {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 interface IAuthContextData {
-  signIn(credentials: ICredentials): Promise<void>;
-  signOut(): void;
-  user: User | null;
-  isAuthenticated: boolean;
+  signIn(credentials: ICredentials): Promise<void>
+  signOut(): void
+  user: User | null
+  isAuthenticated: boolean
 }
 
-export const AuthContext = createContext({} as IAuthContextData);
+export const AuthContext = createContext({} as IAuthContextData)
 
 interface IAuthContextProviderProps {
-  children: React.ReactNode;
+  children: ReactNode
 }
 
 interface IResponse {
@@ -30,11 +29,11 @@ interface IResponse {
 }
 
 export function AuthProvider({ children }: IAuthContextProviderProps) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null)
   const isAuthenticated = !!user
 
   useEffect(() => {
-    const storagedUser = sessionStorage.getItem("@App:user")
+    const storagedUser = localStorage.getItem('@App:user')
 
     if (storagedUser) {
       const { email, name } = JSON.parse(storagedUser) as User
@@ -44,20 +43,23 @@ export function AuthProvider({ children }: IAuthContextProviderProps) {
 
   async function signIn({ email, password }: ICredentials) {
     try {
-      const { data: { name } } = await api.post<IResponse>("/admin/login", {
-        email, password
+      const {
+        data: { name },
+      } = await api.post<IResponse>('/admin/login', {
+        email,
+        password,
       })
 
-      sessionStorage.setItem("@App:user", JSON.stringify({ name, email }))
+      localStorage.setItem('@App:user', JSON.stringify({ name, email }))
 
       setUser({ name, email })
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
   }
 
   function signOut() {
-    sessionStorage.removeItem("@App:user")
+    localStorage.removeItem('@App:user')
     setUser(null)
   }
 

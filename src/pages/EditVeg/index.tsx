@@ -10,11 +10,11 @@ export function EditVeg() {
   const { changeSelectedVeg } = useContext(SelectedVegContext)
   const { isAuthenticated } = useContext(AuthContext)
 
-  if (!isAuthenticated) return <Navigate to="/" />
-
   useEffect(() => {
     changeSelectedVeg(null)
   }, [])
+
+  if (!isAuthenticated) return <Navigate to="/" />
 
   return (
     <EditVegsContainer>
