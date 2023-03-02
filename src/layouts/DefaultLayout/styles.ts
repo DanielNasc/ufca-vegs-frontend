@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 
 export const LayoutContainer = styled.div`
-  height: calc(100vh - 10rem);
+  height: calc(100vh - 5rem);
 
-  margin: 5rem auto;
+  margin: 2.5rem auto;
   padding: 2.5rem;
   border-radius: 16px;
 

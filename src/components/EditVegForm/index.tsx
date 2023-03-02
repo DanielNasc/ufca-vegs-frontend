@@ -5,7 +5,7 @@ import { SelectedVegContext } from '../../contexts/SelectedVegContext'
 import { api } from '../../services/api'
 import { Cell } from '../Cell'
 import { SubmitFormButton } from '../SubmitFormButton/styles'
-import { EditVegContainer, EditVegForm } from './styles'
+import { EditVegContainer, EditVegForm, VegInfoContainer } from './styles'
 import { CheckboxInput } from './CheckboxInput'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
@@ -32,6 +32,11 @@ interface UnusualReservation {
   day: string
   meal: 'lunch' | 'dinner'
   will_come: boolean
+}
+
+function calculateRatio(absences: number, total: number) {
+  if (total === 0) return 0
+  return (absences / total) * 100
 }
 
 export function SelectedVeg() {
@@ -106,8 +111,7 @@ export function SelectedVeg() {
           }
         }
         changeSelectedVeg({
-          card: selectedVeg.card,
-          name: selectedVeg.name,
+          ...selectedVeg,
           scheduleTable: newScheduleTable,
         })
 
@@ -128,10 +132,16 @@ export function SelectedVeg() {
     }
   }
 
+  async function handleDecrementAbscence() {
+    // req.params.id
+    if (!selectedVeg || selectedVeg.absences < 1) return
+    await api.put(`/vegs/decrementabsences/${selectedVeg!.card}`)
+    changeSelectedVeg({ ...selectedVeg, absences: selectedVeg.absences - 1 })
+  }
+
   return (
     <EditVegContainer>
       <h2>{selectedVeg.name}</h2>
-
       <EditVegForm onSubmit={handleSubmit(handleCreateVeg)}>
         <table>
           <thead>
@@ -164,6 +174,26 @@ export function SelectedVeg() {
           Salvar
         </SubmitFormButton>
       </EditVegForm>
+
+      <VegInfoContainer>
+        <h3>Info</h3>
+
+        <div>
+          <p>Faltas ⇒ {selectedVeg.absences}</p>
+          <button type="button" onClick={handleDecrementAbscence}>
+            Decrementar
+          </button>
+        </div>
+        <p>Presenças ⇒ {selectedVeg.attendances}</p>
+        <p>
+          Porcentagem de faltas ⇒{' '}
+          {calculateRatio(
+            selectedVeg.absences,
+            selectedVeg.attendances + selectedVeg.absences,
+          )}
+          %
+        </p>
+      </VegInfoContainer>
     </EditVegContainer>
   )
 }

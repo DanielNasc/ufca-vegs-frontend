@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const CheckboxInputContainer = styled.div`
   display: flex;
@@ -10,7 +10,7 @@ export const CheckboxInputContainer = styled.div`
 
 export const CheckboxInputBaseInput = styled.input`
   appearance: none;
-  
+
   background-color: ${(props) => props.theme['gray-600']};
 
   cursor: pointer;
@@ -25,15 +25,15 @@ export const CheckboxInputBaseInput = styled.input`
   place-content: center;
 
   &::before {
-    content: "";
-    width: .8rem;
-    height: .8rem;
+    content: '';
+    width: 0.8rem;
+    height: 0.8rem;
     transform: scale(0);
     transition: 120ms transform ease-in-out;
-    box-shadow: inset 1em 1em ${(props) => props.theme['red-500']}
+    box-shadow: inset 1em 1em ${(props) => props.theme['red-500']};
   }
 
   &:checked::before {
-    transform: scale(1)
+    transform: scale(1);
   }
 `

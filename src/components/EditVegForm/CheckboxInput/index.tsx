@@ -1,5 +1,5 @@
-import React, { forwardRef } from "react";
-import { CheckboxInputContainer, CheckboxInputBaseInput } from "./styles";
+import React, { forwardRef } from 'react'
+import { CheckboxInputContainer, CheckboxInputBaseInput } from './styles'
 
 interface ICheckboxInputProps {
   name: string
@@ -14,8 +14,8 @@ const Base = ({ name, label, ...rest }: ICheckboxInputProps, ref: any) => {
         type="checkbox"
         name={name}
         id={name}
-        {...rest} 
-        ref={ref} 
+        {...rest}
+        ref={ref}
       />
     </CheckboxInputContainer>
   )

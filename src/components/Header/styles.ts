@@ -9,6 +9,8 @@ export const HeaderContainer = styled.header`
 
   margin-bottom: 1rem;
 
+  /* background-color: red; */
+
   nav {
     display: flex;
     gap: 0.5rem;

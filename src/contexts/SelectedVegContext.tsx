@@ -12,6 +12,8 @@ interface Veg {
   card: number
   name: string
   scheduleTable: ScheduleTable
+  absences: number
+  attendances: number
 }
 
 interface ISelectedVegContext {

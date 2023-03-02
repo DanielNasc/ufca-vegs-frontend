@@ -22,8 +22,10 @@ export function Header() {
   return (
     <HeaderContainer>
       {isAuthenticated ? (
-        <ProfilePicContainer onClick={() => signOut()}>
-          <img src={import.meta.env.VITE_ADM_PIC} alt="" />
+        <ProfilePicContainer>
+          <Link to="/dashboard">
+            <img src={import.meta.env.VITE_ADM_PIC} alt="" />
+          </Link>
         </ProfilePicContainer>
       ) : (
         <Link to="/login">

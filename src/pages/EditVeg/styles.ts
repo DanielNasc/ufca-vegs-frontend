@@ -8,7 +8,7 @@ export const EditVegsContainer = styled.main`
   grid-template-columns: 1fr 4fr;
   grid-template-rows: 1fr;
 
-  grid-template-areas: 'veglist veginfo';
+  grid-template-areas: 'veglist vegcontainer';
 
   overflow: hidden;
 
@@ -16,6 +16,6 @@ export const EditVegsContainer = styled.main`
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
 
-    grid-template-areas: 'veginfo' 'veglist';
+    grid-template-areas: 'vegcontainer' 'veglist';
   }
 `

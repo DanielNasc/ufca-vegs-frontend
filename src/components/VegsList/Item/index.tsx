@@ -7,6 +7,7 @@ interface ItemProps {
   name: string
   card: number
   absences: number
+  attendances: number
 }
 
 type Days = 'mon' | 'tue' | 'wed' | 'thu' | 'fri'
@@ -17,7 +18,7 @@ type ScheduleTable = {
   }
 }
 
-export function Item({ card, name, absences = 0 }: ItemProps) {
+export function Item({ card, name, absences = 0, attendances = 0 }: ItemProps) {
   const [scheduleTable, setScheduleTable] = useState<ScheduleTable | null>(null)
   const { changeSelectedVeg } = useContext(SelectedVegContext)
 
@@ -38,12 +39,11 @@ export function Item({ card, name, absences = 0 }: ItemProps) {
     <ItemContainer
       onClick={async () => {
         await fetchVegs()
-        changeSelectedVeg({ card, name, scheduleTable })
+        changeSelectedVeg({ card, name, scheduleTable, absences, attendances })
       }}
     >
       <h3>{name}</h3>
       <p>{card}</p>
-      <p>{absences} falta(s)</p>
     </ItemContainer>
   )
 }
