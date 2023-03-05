@@ -1,11 +1,17 @@
-import { NotePencil } from 'phosphor-react'
+import { NotePencil, Trash } from 'phosphor-react'
 import { useContext, useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { SelectedVegContext } from '../../contexts/SelectedVegContext'
 import { api } from '../../services/api'
 import { Cell } from '../Cell'
 import { SubmitFormButton } from '../SubmitFormButton/styles'
-import { EditVegContainer, EditVegForm, VegInfoContainer } from './styles'
+import {
+  ChangeCardInput,
+  ChangeInfoButton,
+  EditVegContainer,
+  EditVegForm,
+  VegInfoContainer,
+} from './styles'
 import { CheckboxInput } from './CheckboxInput'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
@@ -27,6 +33,10 @@ interface EditVegFormData {
   is_permanent: boolean
 }
 
+interface EditVegCardFormData {
+  new_card: number
+}
+
 interface UnusualReservation {
   card: number
   day: string
@@ -46,11 +56,21 @@ export function SelectedVeg() {
     reset,
     formState: { isSubmitting },
   } = useForm<EditVegFormData>()
+
   const { selectedVeg } = useContext(SelectedVegContext)
   const { signOut } = useContext(AuthContext)
 
   const [lastChangeWasPermanent, setLastChangeWasPermanent] = useState(false)
   const { changeSelectedVeg } = useContext(SelectedVegContext)
+
+  const {
+    register: registerCard,
+    handleSubmit: handleSubmitCard,
+    reset: resetCard,
+    formState: { isSubmitting: isSubmittingCard },
+  } = useForm<EditVegCardFormData>({
+    defaultValues: { new_card: selectedVeg?.card },
+  })
 
   useEffect(() => {
     const defaultValues = {} as any
@@ -62,7 +82,8 @@ export function SelectedVeg() {
       }
     }
     reset({ ...defaultValues })
-  }, [selectedVeg, reset])
+    resetCard({ new_card: selectedVeg?.card })
+  }, [selectedVeg, reset, resetCard])
 
   if (!selectedVeg) {
     return (
@@ -119,6 +140,40 @@ export function SelectedVeg() {
       } else {
         toast.error(`[${response.status}] - ${response.data.message}`)
       }
+
+      resetCard({ new_card: 0 })
+    } catch (e) {
+      if (!(e instanceof AxiosError) || !e.response) {
+        toast.error('Ocorreu um erro não identificado')
+        return
+      }
+
+      const { response } = e
+      toast.error(`[${response.status}] - ${response.data.message}`)
+
+      if (response.status === 401) signOut()
+    }
+  }
+
+  const handleUpdateCard: SubmitHandler<EditVegCardFormData> = async (
+    values,
+  ) => {
+    const body = {
+      old_card: selectedVeg.card,
+      new_card: values.new_card,
+    }
+
+    try {
+      const response = await api.patch('/vegs/card', body)
+      console.log(response.status)
+
+      if (response.status === 200) {
+        toast.success('🥦 Usuário Atualizado! 🥦')
+        changeSelectedVeg({
+          ...selectedVeg,
+          card: values.new_card,
+        })
+      }
     } catch (e) {
       if (!(e instanceof AxiosError) || !e.response) {
         toast.error('Ocorreu um erro não identificado')
@@ -141,8 +196,8 @@ export function SelectedVeg() {
 
   return (
     <EditVegContainer>
-      <h2>{selectedVeg.name}</h2>
       <EditVegForm onSubmit={handleSubmit(handleCreateVeg)}>
+        <h2>Agenda</h2>
         <table>
           <thead>
             <th>Seg</th>
@@ -176,22 +231,36 @@ export function SelectedVeg() {
       </EditVegForm>
 
       <VegInfoContainer>
-        <h3>Info</h3>
-
+        <div>
+          <h3>Info</h3>
+          <Trash size={16} />
+        </div>
+        <h2>{selectedVeg.name}</h2>
+        <div>
+          <p>Cartão ⇒</p>
+          <form onSubmit={handleSubmitCard(handleUpdateCard)}>
+            <ChangeCardInput
+              type="number"
+              {...registerCard('new_card', {
+                max: 99999999,
+                min: 10000000,
+              })}
+            />
+            <ChangeInfoButton type="submit" disabled={isSubmittingCard}>
+              Mudar
+            </ChangeInfoButton>
+          </form>
+        </div>
         <div>
           <p>Faltas ⇒ {selectedVeg.absences}</p>
-          <button type="button" onClick={handleDecrementAbscence}>
+          <ChangeInfoButton type="button" onClick={handleDecrementAbscence}>
             Decrementar
-          </button>
+          </ChangeInfoButton>
         </div>
         <p>Presenças ⇒ {selectedVeg.attendances}</p>
         <p>
           Porcentagem de faltas ⇒{' '}
-          {calculateRatio(
-            selectedVeg.absences,
-            selectedVeg.attendances + selectedVeg.absences,
-          )}
-          %
+          {calculateRatio(selectedVeg.absences, selectedVeg.attendances)}%
         </p>
       </VegInfoContainer>
     </EditVegContainer>
