@@ -19,7 +19,8 @@
     "react-router-dom": "^6.4.3",
     "react-toastify": "^9.1.1",
     "socket.io-client": "^4.5.3",
-    "styled-components": "^5.3.6"
+    "styled-components": "^5.3.6",
+    "vite-plugin-svgr": "^2.4.0"
   },
   "devDependencies": {
     "@rocketseat/eslint-config": "^1.1.3",

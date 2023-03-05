@@ -10,12 +10,14 @@ import {
   ChangeInfoButton,
   EditVegContainer,
   EditVegForm,
+  NoVegSelectedContainer,
   VegInfoContainer,
 } from './styles'
 import { CheckboxInput } from './CheckboxInput'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
 import { AuthContext } from '../../contexts/AuthContext'
+import { ReactComponent as NoVegImg } from '../../assets/images/no-veg-selected.svg'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
 
@@ -87,9 +89,10 @@ export function SelectedVeg() {
 
   if (!selectedVeg) {
     return (
-      <EditVegContainer>
-        <h1>Selecione um vegetariano</h1>
-      </EditVegContainer>
+      <NoVegSelectedContainer>
+        <NoVegImg />
+        <h2>Nenhum usuário selecionado...</h2>
+      </NoVegSelectedContainer>
     )
   }
 

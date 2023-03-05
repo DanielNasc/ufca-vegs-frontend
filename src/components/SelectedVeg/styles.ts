@@ -112,3 +112,27 @@ export const ChangeInfoButton = styled.button`
     background-color: ${(props) => props.theme['red-500']};
   }
 `
+
+export const NoVegSelectedContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    height: 25rem;
+    width: 25rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  @media (max-width: 500px) {
+    svg {
+      height: 15rem;
+      width: 15rem;
+    }
+  }
+`
