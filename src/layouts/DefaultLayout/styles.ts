@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const LayoutContainer = styled.div`
-  height: calc(100vh - 5rem);
+  min-height: calc(100vh - 5rem);
 
   margin: 2.5rem auto;
   padding: 2.5rem;
@@ -13,7 +13,7 @@ export const LayoutContainer = styled.div`
   flex-direction: column;
 
   @media (max-width: 768px) {
-    height: calc(100vh - 5rem);
+    min-height: calc(100vh - 5rem);
     margin: 2.5rem auto;
     padding: 1.25rem;
   }
@@ -23,7 +23,7 @@ export const LayoutContainer = styled.div`
   }
 
   @media (max-width: 320px) {
-    height: 100vh;
+    min-height: 100vh;
     width: 100%;
 
     border-radius: 0;
