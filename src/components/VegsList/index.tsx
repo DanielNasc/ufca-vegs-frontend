@@ -7,6 +7,7 @@ interface Veg {
   name: string
   card: number
   absences: number
+  attendances: number
 }
 
 export function VegsList() {
@@ -29,6 +30,7 @@ export function VegsList() {
           name={veg.name}
           card={veg.card}
           absences={veg.absences}
+          attendances={veg.attendances}
         />
       ))}
     </ListContainer>

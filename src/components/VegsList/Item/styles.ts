@@ -6,6 +6,8 @@ export const ItemContainer = styled.div`
 
   border-bottom: 1px solid ${(props) => props.theme['gray-600']};
 
+  cursor: pointer;
+
   line-height: 1.5rem;
 
   &:hover {

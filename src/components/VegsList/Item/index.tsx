@@ -12,6 +12,7 @@ interface ItemProps {
 
 type Days = 'mon' | 'tue' | 'wed' | 'thu' | 'fri'
 type ScheduleTable = {
+  // eslint-disable-next-line no-unused-vars
   [key in Days]: {
     lunch: boolean
     dinner: boolean

@@ -263,7 +263,13 @@ export function SelectedVeg() {
         <p>Presenças ⇒ {selectedVeg.attendances}</p>
         <p>
           Porcentagem de faltas ⇒{' '}
-          {calculateRatio(selectedVeg.absences, selectedVeg.attendances)}%
+          {Math.round(
+            calculateRatio(
+              selectedVeg.absences,
+              selectedVeg.attendances + selectedVeg.absences,
+            ),
+          )}
+          %
         </p>
       </VegInfoContainer>
     </EditVegContainer>
