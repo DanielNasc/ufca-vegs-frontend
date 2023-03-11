@@ -28,6 +28,13 @@ interface IResponse {
   name: string
 }
 
+interface IVerifyResponse {
+  admin: {
+    name: string
+    email: string
+  }
+}
+
 export function AuthProvider({ children }: IAuthContextProviderProps) {
   const [user, setUser] = useState<User | null>(null)
   const isAuthenticated = !!user
@@ -35,10 +42,30 @@ export function AuthProvider({ children }: IAuthContextProviderProps) {
   useEffect(() => {
     const storagedUser = localStorage.getItem('@App:user')
 
-    if (storagedUser) {
-      const { email, name } = JSON.parse(storagedUser) as User
-      setUser({ email, name })
-    }
+    if (!storagedUser) return
+    ;(async () => {
+      try {
+        const response = await api.get<IVerifyResponse>('/admin/verify')
+
+        if (response.status === 200) {
+          // compare response.data with storagedUser
+          const { name, email } = JSON.parse(storagedUser)
+
+          if (
+            response.data.admin.name === name &&
+            response.data.admin.email === email
+          ) {
+            setUser({ name, email })
+          } else {
+            localStorage.removeItem('@App:user')
+            setUser(null)
+          }
+        }
+      } catch {
+        localStorage.removeItem('@App:user')
+        setUser(null)
+      }
+    })()
   }, [])
 
   async function signIn({ email, password }: ICredentials) {
