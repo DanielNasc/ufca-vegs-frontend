@@ -8,6 +8,7 @@ import { SubmitFormButton } from '../SubmitFormButton/styles'
 import {
   ChangeCardInput,
   ChangeInfoButton,
+  DeleteVegButton,
   EditVegContainer,
   EditVegForm,
   NoVegSelectedContainer,
@@ -197,6 +198,12 @@ export function SelectedVeg() {
     changeSelectedVeg({ ...selectedVeg, absences: selectedVeg.absences - 1 })
   }
 
+  async function handleDeleteVeg() {
+    if (!selectedVeg) return
+    await api.delete(`/vegs/${selectedVeg.card}`)
+    changeSelectedVeg(null)
+  }
+
   return (
     <EditVegContainer>
       <EditVegForm onSubmit={handleSubmit(handleCreateVeg)}>
@@ -236,7 +243,9 @@ export function SelectedVeg() {
       <VegInfoContainer>
         <div>
           <h3>Info</h3>
-          <Trash size={16} />
+          <DeleteVegButton type="button" onClick={handleDeleteVeg}>
+            <Trash size={16} />
+          </DeleteVegButton>
         </div>
         <h2>{selectedVeg.name}</h2>
         <div>

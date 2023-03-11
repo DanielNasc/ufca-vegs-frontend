@@ -80,16 +80,6 @@ export const ChangeCardInput = styled.input`
   border-radius: 8px;
   outline: none;
 
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  &[type='number'] {
-    -moz-appearance: textfield;
-  }
-
   &:focus {
     border: 1px solid ${(props) => props.theme['red-500']};
   }
@@ -134,5 +124,21 @@ export const NoVegSelectedContainer = styled.div`
       height: 15rem;
       width: 15rem;
     }
+  }
+`
+
+// invisible button to delete veg
+export const DeleteVegButton = styled.button`
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: ${(props) => props.theme['gray-100']};
+
+  svg {
+    transition: all 0.1s ease-in-out;
+  }
+
+  &:hover {
+    color: ${(props) => props.theme['red-500']};
   }
 `
