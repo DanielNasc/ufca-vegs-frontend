@@ -1,5 +1,5 @@
 import { NotePencil, Trash } from 'phosphor-react'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { SelectedVegContext } from '../../contexts/SelectedVegContext'
 import { api } from '../../services/api'
@@ -47,6 +47,15 @@ interface UnusualReservation {
   will_come: boolean
 }
 
+type ScheduleTable = {
+  [key: string]: {
+    [meal: string]: {
+      is_permanent: boolean
+      will_come: boolean
+    }
+  }
+}
+
 function calculateRatio(absences: number, total: number) {
   if (total === 0) return 0
   return (absences / total) * 100
@@ -63,7 +72,6 @@ export function SelectedVeg() {
   const { selectedVeg } = useContext(SelectedVegContext)
   const { signOut } = useContext(AuthContext)
 
-  const [lastChangeWasPermanent, setLastChangeWasPermanent] = useState(false)
   const { changeSelectedVeg } = useContext(SelectedVegContext)
 
   const {
@@ -79,11 +87,15 @@ export function SelectedVeg() {
     const defaultValues = {} as any
     for (const day of DAYS) {
       for (const meal of ['lunch', 'dinner'] as const) {
-        defaultValues[`${day}_${meal}`] = selectedVeg
-          ? selectedVeg.scheduleTable[day][meal]
-          : false
+        if (selectedVeg?.scheduleTable[day][meal]) {
+          defaultValues[`${day}_${meal}`] =
+            selectedVeg?.scheduleTable[day][meal]?.will_come
+        } else {
+          defaultValues[`${day}_${meal}`] = false
+        }
       }
     }
+
     reset({ ...defaultValues })
     resetCard({ new_card: selectedVeg?.card })
   }, [selectedVeg, reset, resetCard])
@@ -97,7 +109,7 @@ export function SelectedVeg() {
     )
   }
 
-  const handleCreateVeg: SubmitHandler<EditVegFormData> = async (values) => {
+  const handleUpdateVeg: SubmitHandler<EditVegFormData> = async (values) => {
     const body = {
       card: selectedVeg.card,
       unusualReservations: [] as UnusualReservation[],
@@ -106,41 +118,53 @@ export function SelectedVeg() {
 
     for (const day of DAYS) {
       for (const meal of ['lunch', 'dinner'] as const) {
-        if (
-          values[`${day}_${meal}`] !== selectedVeg.scheduleTable[day][meal] ||
-          values.is_permanent !== lastChangeWasPermanent
-        ) {
+        const key = `${day}_${meal}` as const
+        const reservation = selectedVeg.scheduleTable[day][meal]
+
+        if (values[key] !== reservation.will_come) {
           body.unusualReservations.push({
             card: selectedVeg.card,
-            day,
             meal,
-            will_come: values[`${day}_${meal}`],
+            day,
+            will_come: values[key],
           })
         }
       }
     }
 
+    console.log(body)
+
     if (!body.unusualReservations.length) return
 
     try {
       const response = await api.post('/vegs/unusual', body)
-      console.log(response.status)
 
       if (response.status === 201) {
         toast.success('🥦 Usuário Atualizado! 🥦')
-        const newScheduleTable = structuredClone(selectedVeg.scheduleTable)
+        const newScheduleTable: ScheduleTable = structuredClone(
+          selectedVeg.scheduleTable,
+        )
 
-        for (const day of DAYS) {
-          for (const meal of ['lunch', 'dinner'] as const) {
-            newScheduleTable[day][meal] = values[`${day}_${meal}`]
+        for (const newReservation of body.unusualReservations) {
+          const oldReservation =
+            selectedVeg.scheduleTable[newReservation.day][newReservation.meal]
+
+          let isPermanent = body.is_permanent
+
+          if (oldReservation && !oldReservation.is_permanent) {
+            isPermanent = true
+          }
+
+          newScheduleTable[newReservation.day][newReservation.meal] = {
+            is_permanent: isPermanent,
+            will_come: newReservation.will_come,
           }
         }
+
         changeSelectedVeg({
           ...selectedVeg,
           scheduleTable: newScheduleTable,
         })
-
-        setLastChangeWasPermanent(values.is_permanent)
       } else {
         toast.error(`[${response.status}] - ${response.data.message}`)
       }
@@ -169,7 +193,6 @@ export function SelectedVeg() {
 
     try {
       const response = await api.patch('/vegs/card', body)
-      console.log(response.status)
 
       if (response.status === 200) {
         toast.success('🥦 Usuário Atualizado! 🥦')
@@ -206,7 +229,7 @@ export function SelectedVeg() {
 
   return (
     <EditVegContainer>
-      <EditVegForm onSubmit={handleSubmit(handleCreateVeg)}>
+      <EditVegForm onSubmit={handleSubmit(handleUpdateVeg)}>
         <h2>Agenda</h2>
         <table>
           <thead>
@@ -220,13 +243,31 @@ export function SelectedVeg() {
             <tr>
               {DAYS.map((day) => {
                 const code = `${day}_lunch` as keyof EditVegFormData
-                return <Cell key={code} fromContext {...register(code)} />
+                return (
+                  <Cell
+                    key={code}
+                    isPermanent={
+                      selectedVeg.scheduleTable[day].lunch?.is_permanent
+                    }
+                    fromContext
+                    {...register(code)}
+                  />
+                )
               })}
             </tr>
             <tr>
               {DAYS.map((day) => {
                 const code = `${day}_dinner` as keyof EditVegFormData
-                return <Cell key={code} fromContext {...register(code)} />
+                return (
+                  <Cell
+                    key={code}
+                    isPermanent={
+                      selectedVeg.scheduleTable[day].dinner?.is_permanent
+                    }
+                    fromContext
+                    {...register(code)}
+                  />
+                )
               })}
             </tr>
           </tbody>

@@ -10,12 +10,12 @@ interface ItemProps {
   attendances: number
 }
 
-type Days = 'mon' | 'tue' | 'wed' | 'thu' | 'fri'
 type ScheduleTable = {
-  // eslint-disable-next-line no-unused-vars
-  [key in Days]: {
-    lunch: boolean
-    dinner: boolean
+  [key: string]: {
+    [meal: string]: {
+      is_permanent: boolean
+      will_come: boolean
+    } | null
   }
 }
 
@@ -25,6 +25,7 @@ export function Item({ card, name, absences = 0, attendances = 0 }: ItemProps) {
 
   async function fetchVegs() {
     const schedule = await api.get(`/vegs/scheduletable/${card}`)
+
     setScheduleTable(schedule.data)
   }
 

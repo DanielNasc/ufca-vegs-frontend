@@ -1,10 +1,11 @@
 import { createContext, ReactNode, useState } from 'react'
 
-type Days = 'mon' | 'tue' | 'wed' | 'thu' | 'fri'
 type ScheduleTable = {
-  [key in Days]: {
-    lunch: boolean
-    dinner: boolean
+  [key: string]: {
+    [meal: string]: {
+      is_permanent: boolean
+      will_come: boolean
+    }
   }
 }
 

@@ -15,8 +15,11 @@ export const CellLabel = styled.label`
 
   border-radius: 8px;
 
-  display: inline-block;
   cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   background-color: ${(props) => props.theme['gray-700']};
 

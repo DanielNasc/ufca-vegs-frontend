@@ -1,14 +1,19 @@
+import { Clock } from 'phosphor-react'
 import { forwardRef } from 'react'
 import { CellContainer, CellLabel } from './styles'
 
 interface CellProps {
   name: string
   fromContext?: boolean
+  isPermanent?: boolean
 }
 
 // type Days = 'mon' | 'tue' | 'wed' | 'thu' | 'fri'
 
-const Base = ({ name, fromContext, ...rest }: CellProps, ref: any) => {
+const Base = (
+  { name, fromContext, isPermanent, ...rest }: CellProps,
+  ref: any,
+) => {
   // const { selectedVeg } = useContext(SelectedVegContext)
 
   // useEffect(() => {
@@ -30,7 +35,9 @@ const Base = ({ name, fromContext, ...rest }: CellProps, ref: any) => {
         ref={ref}
         // checked={isActive}
       />
-      <CellLabel htmlFor={name} />
+      <CellLabel htmlFor={name}>
+        {isPermanent !== undefined && !isPermanent && <Clock size={12} />}
+      </CellLabel>
     </CellContainer>
   )
 }
