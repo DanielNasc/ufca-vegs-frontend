@@ -22,9 +22,9 @@ export function Header() {
   return (
     <HeaderContainer>
       {isAuthenticated ? (
-        <ProfilePicContainer>
+        <ProfilePicContainer pfp_src={import.meta.env.VITE_ADM_PIC}>
           <Link to="/dashboard">
-            <img src={import.meta.env.VITE_ADM_PIC} alt="" />
+            <span />
           </Link>
         </ProfilePicContainer>
       ) : (

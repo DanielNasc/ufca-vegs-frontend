@@ -59,7 +59,11 @@ const gradient = keyframes`
 	}
 `
 
-export const ProfilePicContainer = styled.div`
+interface ProfilePicContainerProps {
+  pfp_src: string
+}
+
+export const ProfilePicContainer = styled.div<ProfilePicContainerProps>`
   background: linear-gradient(
     -45deg,
     #ee7752,
@@ -81,9 +85,14 @@ export const ProfilePicContainer = styled.div`
   align-items: center;
   justify-content: center;
 
-  img {
+  span {
     height: 3rem;
     width: 3rem;
+
+    background-image: url(${(props) => props.pfp_src});
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 
     border: 1px solid black;
     border-radius: 999999px;
