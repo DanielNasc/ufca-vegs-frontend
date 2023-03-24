@@ -7,7 +7,7 @@ import { useContext } from 'react'
 import { AuthContext } from '../../contexts/AuthContext'
 
 export function Header() {
-  const { isAuthenticated, signOut } = useContext(AuthContext)
+  const { isAuthenticated } = useContext(AuthContext)
 
   /* const windowWidth = screen.width
 

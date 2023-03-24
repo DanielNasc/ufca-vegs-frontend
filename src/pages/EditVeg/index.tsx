@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 import { SelectedVeg } from '../../components/SelectedVeg'
-import { VegsList } from '../../components/VegsList'
+// import { VegsList } from '../../components/VegsList'
 import { AuthContext } from '../../contexts/AuthContext'
 import { SelectedVegContext } from '../../contexts/SelectedVegContext'
 import { EditVegsContainer } from './styles'
@@ -18,7 +18,7 @@ export function EditVeg() {
 
   return (
     <EditVegsContainer>
-      <VegsList />
+      {/* <VegsList /> */}
       <SelectedVeg />
     </EditVegsContainer>
   )

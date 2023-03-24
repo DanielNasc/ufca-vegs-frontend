@@ -19,6 +19,7 @@ import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
 import { AuthContext } from '../../contexts/AuthContext'
 import { ReactComponent as NoVegImg } from '../../assets/images/no-veg-selected.svg'
+import { SearchVegs } from '../SearchVeg'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
 
@@ -102,10 +103,11 @@ export function SelectedVeg() {
 
   if (!selectedVeg) {
     return (
-      <NoVegSelectedContainer>
-        <NoVegImg />
-        <h2>Nenhum usuário selecionado...</h2>
-      </NoVegSelectedContainer>
+      // <NoVegSelectedContainer>
+      //   <NoVegImg />
+      //   <h2>Nenhum usuário selecionado...</h2>
+      // </NoVegSelectedContainer>
+      <SearchVegs />
     )
   }
 
@@ -224,6 +226,10 @@ export function SelectedVeg() {
   async function handleDeleteVeg() {
     if (!selectedVeg) return
     await api.delete(`/vegs/${selectedVeg.card}`)
+    changeSelectedVeg(null)
+  }
+
+  function handleCancel() {
     changeSelectedVeg(null)
   }
 

@@ -1,16 +1,18 @@
 import styled from 'styled-components'
 
 export const EditVegContainer = styled.div`
-  flex: 1;
+  /* flex: 1; */
   /* gap: 2rem; */
 
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr;
+  grid-template-rows: 100%;
   grid-template-areas: 'editvegform veginfo';
   /* grid-template-areas: 'vegname' 'editvegform veginfo'; */
 
-  grid-area: vegcontainer;
+  /* grid-area: vegcontainer; */
+
+  height: 100%;
 
   @media (max-width: 800px) {
     margin-bottom: 1rem;
@@ -37,18 +39,20 @@ export const EditVegForm = styled.form`
   flex-direction: column;
   justify-content: flex-start;
 
+  background-color: blue;
+
   grid-area: editvegform;
 
   gap: 1rem;
   padding: 0 3rem;
-  margin-top: 2rem;
 `
 export const VegInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 
-  background-color: ${(props) => props.theme['gray-700']};
+  /* background-color: ${(props) => props.theme['gray-700']}; */
+  background-color: red;
 
   padding: 2rem;
 

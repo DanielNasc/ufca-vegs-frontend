@@ -15,7 +15,7 @@ type ScheduleTable = {
     [meal: string]: {
       is_permanent: boolean
       will_come: boolean
-    } | null
+    }
   }
 }
 
