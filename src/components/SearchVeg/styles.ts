@@ -66,6 +66,12 @@ export const SearchVegsButton = styled.button`
   &:hover {
     filter: brightness(0.9);
   }
+
+  @media (max-width: 425px) {
+    span {
+      display: none;
+    }
+  }
 `
 
 export const SearchVegsResults = styled.div`
@@ -102,6 +108,8 @@ export const SearchVegsResult = styled.div<SearchVegsResultProps>`
 
   background-color: ${(props) => props.theme['gray-700']};
 
+  gap: 0.5rem;
+
   svg {
     color: ${(props) =>
       props.suspended ? props.theme['red-500'] : props.theme['green-500']};
@@ -109,6 +117,12 @@ export const SearchVegsResult = styled.div<SearchVegsResultProps>`
 
   span {
     text-align: start;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    /* doesnt  */
   }
 
   button {
@@ -127,6 +141,15 @@ export const SearchVegsResult = styled.div<SearchVegsResultProps>`
 
     &:hover {
       filter: brightness(0.9);
+    }
+  }
+
+  @media (max-width: 550px) {
+    /* [icon(blocked|verified)] [name] [select] */
+    grid-template-columns: 1fr 8fr 2fr;
+
+    span:nth-child(3) {
+      display: none;
     }
   }
 `

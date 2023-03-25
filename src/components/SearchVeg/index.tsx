@@ -75,7 +75,7 @@ export function SearchVegs() {
           onClick={handleSubmit(handleSearchVegs)}
         >
           <MagnifyingGlass size={18} />
-          Procurar
+          <span>Buscar</span>
         </SearchVegsButton>
       </SearchVegsForm>
 
@@ -85,7 +85,7 @@ export function SearchVegs() {
             {veg.suspended ? <Prohibit size={24} /> : <Check size={24} />}
             <span>{veg.name}</span>
             <span>{veg.card}</span>
-            <button onClick={() => handleSelectVeg(veg)}>Selecionar</button>
+            <button onClick={() => handleSelectVeg(veg)}>Editar</button>
           </SearchVegsResult>
         ))}
       </SearchVegsResults>
