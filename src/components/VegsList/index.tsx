@@ -8,6 +8,7 @@ interface Veg {
   card: number
   absences: number
   attendances: number
+  suspended: boolean
 }
 
 export function VegsList() {

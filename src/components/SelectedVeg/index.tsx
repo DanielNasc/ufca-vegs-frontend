@@ -234,6 +234,16 @@ export function SelectedVeg() {
     changeSelectedVeg(null)
   }
 
+  async function handleSuspendVeg() {
+    if (!selectedVeg) return
+
+    const response = await api.put(`/vegs/togglesuspended/${selectedVeg.card}`)
+
+    if (response.status === 200) {
+      changeSelectedVeg({ ...selectedVeg, suspended: !selectedVeg.suspended })
+    }
+  }
+
   return (
     <EditVegContainer>
       <UnselectVeg onClick={handleCancel}>{'<--'}</UnselectVeg>
@@ -298,7 +308,7 @@ export function SelectedVeg() {
         </div>
         <h2>{selectedVeg.name}</h2>
         <div>
-          <p>Cartão ⇒</p>
+          <p>Cartão :</p>
           <form onSubmit={handleSubmitCard(handleUpdateCard)}>
             <ChangeCardInput
               type="number"
@@ -313,14 +323,20 @@ export function SelectedVeg() {
           </form>
         </div>
         <div>
-          <p>Faltas ⇒ {selectedVeg.absences}</p>
+          <p>Faltas : {selectedVeg.absences}</p>
           <ChangeInfoButton type="button" onClick={handleDecrementAbscence}>
             Decrementar
           </ChangeInfoButton>
         </div>
-        <p>Presenças ⇒ {selectedVeg.attendances}</p>
+        <div>
+          <p>Suspenso: {selectedVeg.suspended ? 'Sim' : 'Não'}</p>
+          <ChangeInfoButton type="button" onClick={handleSuspendVeg}>
+            Mudar
+          </ChangeInfoButton>
+        </div>
+        <p>Presenças : {selectedVeg.attendances}</p>
         <p>
-          Porcentagem de faltas ⇒{' '}
+          Porcentagem de faltas :{' '}
           {Math.round(
             calculateRatio(
               selectedVeg.absences,

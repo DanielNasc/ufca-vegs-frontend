@@ -15,6 +15,7 @@ interface Veg {
   scheduleTable: ScheduleTable
   absences: number
   attendances: number
+  suspended: boolean
 }
 
 interface ISelectedVegContext {

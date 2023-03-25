@@ -21,6 +21,7 @@ interface Veg {
   name: string
   absences: number
   attendances: number
+  suspended: boolean
 }
 
 export function SearchVegs() {
