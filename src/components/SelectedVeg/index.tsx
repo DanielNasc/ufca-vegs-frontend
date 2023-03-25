@@ -1,4 +1,4 @@
-import { NotePencil, Trash } from 'phosphor-react'
+import { ArrowLeft, NotePencil, Trash } from 'phosphor-react'
 import { useContext, useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { SelectedVegContext } from '../../contexts/SelectedVegContext'
@@ -246,7 +246,9 @@ export function SelectedVeg() {
 
   return (
     <EditVegContainer>
-      <UnselectVeg onClick={handleCancel}>{'<--'}</UnselectVeg>
+      <UnselectVeg onClick={handleCancel}>
+        <ArrowLeft size={24} weight="bold" />
+      </UnselectVeg>
       <EditVegForm onSubmit={handleSubmit(handleUpdateVeg)}>
         <h2>Agenda</h2>
         <table>

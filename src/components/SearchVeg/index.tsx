@@ -35,7 +35,12 @@ interface Veg {
 
 export function SearchVegs() {
   const { changeSelectedVeg } = useContext(SelectedVegContext)
-  const { reset, handleSubmit, register } = useForm<SearchVegFormData>()
+  const {
+    reset,
+    handleSubmit,
+    register,
+    formState: { isSubmitting },
+  } = useForm<SearchVegFormData>()
   const [vegs, setVegs] = useState<Veg[]>([])
 
   const handleSearchVegs = async (values: SearchVegFormData) => {
@@ -57,13 +62,20 @@ export function SearchVegs() {
   return (
     <SearchVegsContainer>
       <SearchVegsForm>
-        <SearchVegsInput type="text" {...register('name')} />
+        <SearchVegsInput
+          type="text"
+          autoFocus
+          {...register('name', {
+            required: true,
+          })}
+        />
         <SearchVegsButton
           type="submit"
+          disabled={isSubmitting}
           onClick={handleSubmit(handleSearchVegs)}
         >
           <MagnifyingGlass size={18} />
-          Search
+          Procurar
         </SearchVegsButton>
       </SearchVegsForm>
 
@@ -73,7 +85,7 @@ export function SearchVegs() {
             {veg.suspended ? <Prohibit size={24} /> : <Check size={24} />}
             <span>{veg.name}</span>
             <span>{veg.card}</span>
-            <button onClick={() => handleSelectVeg(veg)}>Select</button>
+            <button onClick={() => handleSelectVeg(veg)}>Selecionar</button>
           </SearchVegsResult>
         ))}
       </SearchVegsResults>

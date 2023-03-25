@@ -36,6 +36,12 @@ export const EditVegContainer = styled.div`
 
 export const UnselectVeg = styled.button`
   position: absolute;
+
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  color: ${(props) => props.theme['gray-100']};
 `
 
 export const EditVegForm = styled.form`
@@ -148,5 +154,10 @@ export const DeleteVegButton = styled.button`
 
   &:hover {
     color: ${(props) => props.theme['red-500']};
+  }
+
+  &:disabled {
+    filter: brightness(0.5);
+    cursor: not-allowed;
   }
 `
