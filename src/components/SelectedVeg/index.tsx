@@ -11,14 +11,15 @@ import {
   DeleteVegButton,
   EditVegContainer,
   EditVegForm,
-  NoVegSelectedContainer,
+  // NoVegSelectedContainer,
+  UnselectVeg,
   VegInfoContainer,
 } from './styles'
 import { CheckboxInput } from './CheckboxInput'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
 import { AuthContext } from '../../contexts/AuthContext'
-import { ReactComponent as NoVegImg } from '../../assets/images/no-veg-selected.svg'
+// import { ReactComponent as NoVegImg } from '../../assets/images/no-veg-selected.svg'
 import { SearchVegs } from '../SearchVeg'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
@@ -235,6 +236,7 @@ export function SelectedVeg() {
 
   return (
     <EditVegContainer>
+      <UnselectVeg onClick={handleCancel}>{'<--'}</UnselectVeg>
       <EditVegForm onSubmit={handleSubmit(handleUpdateVeg)}>
         <h2>Agenda</h2>
         <table>

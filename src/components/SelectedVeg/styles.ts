@@ -8,11 +8,11 @@ export const EditVegContainer = styled.div`
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 100%;
   grid-template-areas: 'editvegform veginfo';
-  /* grid-template-areas: 'vegname' 'editvegform veginfo'; */
+
+  grid-template-areas: 'editvegform veginfo';
 
   /* grid-area: vegcontainer; */
-
-  height: 100%;
+  flex: 1;
 
   @media (max-width: 800px) {
     margin-bottom: 1rem;
@@ -34,31 +34,35 @@ export const EditVegContainer = styled.div`
   }
 `
 
+export const UnselectVeg = styled.button`
+  position: absolute;
+`
+
 export const EditVegForm = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  align-items: center;
 
-  background-color: blue;
+  /* background-color: blue; */
 
   grid-area: editvegform;
 
   gap: 1rem;
-  padding: 0 3rem;
+  padding: 2rem 5%;
 `
 export const VegInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 
-  /* background-color: ${(props) => props.theme['gray-700']}; */
-  background-color: red;
+  background-color: ${(props) => props.theme['gray-700']};
+  /* background-color: red; */
 
   padding: 2rem;
+  gap: 0.25rem;
 
   grid-area: veginfo;
-
-  gap: 0.25rem;
 
   border-radius: 8px;
 

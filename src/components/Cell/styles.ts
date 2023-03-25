@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const CellContainer = styled.td`
   height: 2rem;
-  width: 4rem;
+  width: 5rem;
 
   input {
     display: none;

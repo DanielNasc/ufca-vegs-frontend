@@ -4,6 +4,7 @@ export const EditVegsContainer = styled.main`
   flex: 1;
   /* display: grid; */
   gap: 1rem;
+  display: flex;
 
   /* grid-template: 'veglist' 'veginfo'; */
   /* grid-template-columns: 1fr 4fr;
