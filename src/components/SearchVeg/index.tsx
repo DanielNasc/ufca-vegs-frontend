@@ -1,7 +1,16 @@
+import { Check, MagnifyingGlass, Prohibit } from 'phosphor-react'
 import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { SelectedVegContext } from '../../contexts/SelectedVegContext'
 import { api } from '../../services/api'
+import {
+  SearchVegsButton,
+  SearchVegsContainer,
+  SearchVegsForm,
+  SearchVegsInput,
+  SearchVegsResult,
+  SearchVegsResults,
+} from './styles'
 
 interface SearchVegFormData {
   name: string
@@ -46,21 +55,28 @@ export function SearchVegs() {
   }
 
   return (
-    <div>
-      <form>
-        <input type="text" {...register('name')} />
-        <button type="submit" onClick={handleSubmit(handleSearchVegs)}>
+    <SearchVegsContainer>
+      <SearchVegsForm>
+        <SearchVegsInput type="text" {...register('name')} />
+        <SearchVegsButton
+          type="submit"
+          onClick={handleSubmit(handleSearchVegs)}
+        >
+          <MagnifyingGlass size={18} />
           Search
-        </button>
-      </form>
+        </SearchVegsButton>
+      </SearchVegsForm>
 
-      <ul>
+      <SearchVegsResults>
         {vegs.map((veg) => (
-          <li key={veg.card}>
-            <button onClick={() => handleSelectVeg(veg)}>{veg.name}</button>
-          </li>
+          <SearchVegsResult suspended={veg.suspended} key={veg.card}>
+            {veg.suspended ? <Prohibit size={24} /> : <Check size={24} />}
+            <span>{veg.name}</span>
+            <span>{veg.card}</span>
+            <button onClick={() => handleSelectVeg(veg)}>Select</button>
+          </SearchVegsResult>
         ))}
-      </ul>
-    </div>
+      </SearchVegsResults>
+    </SearchVegsContainer>
   )
 }
