@@ -44,7 +44,6 @@ export function SearchVegs() {
   const [vegs, setVegs] = useState<Veg[]>([])
 
   const handleSearchVegs = async (values: SearchVegFormData) => {
-    console.log(values)
     const vegs = await api.get(`/vegs/search/${values.name}`)
 
     setVegs(vegs.data)

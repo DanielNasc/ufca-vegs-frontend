@@ -135,8 +135,6 @@ export function SelectedVeg() {
       }
     }
 
-    console.log(body)
-
     if (!body.unusualReservations.length) return
 
     try {
