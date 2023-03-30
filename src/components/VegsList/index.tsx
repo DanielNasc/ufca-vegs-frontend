@@ -32,6 +32,7 @@ export function VegsList() {
           card={veg.card}
           absences={veg.absences}
           attendances={veg.attendances}
+          suspended={veg.suspended}
         />
       ))}
     </ListContainer>

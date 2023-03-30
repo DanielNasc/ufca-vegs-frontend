@@ -8,6 +8,7 @@ interface ItemProps {
   card: number
   absences: number
   attendances: number
+  suspended: boolean
 }
 
 type ScheduleTable = {
@@ -19,7 +20,13 @@ type ScheduleTable = {
   }
 }
 
-export function Item({ card, name, absences = 0, attendances = 0 }: ItemProps) {
+export function Item({
+  card,
+  name,
+  absences = 0,
+  attendances = 0,
+  suspended,
+}: ItemProps) {
   const [scheduleTable, setScheduleTable] = useState<ScheduleTable | null>(null)
   const { changeSelectedVeg } = useContext(SelectedVegContext)
 
@@ -41,7 +48,14 @@ export function Item({ card, name, absences = 0, attendances = 0 }: ItemProps) {
     <ItemContainer
       onClick={async () => {
         await fetchVegs()
-        changeSelectedVeg({ card, name, scheduleTable, absences, attendances })
+        changeSelectedVeg({
+          card,
+          name,
+          scheduleTable,
+          absences,
+          attendances,
+          suspended,
+        })
       }}
     >
       <h3>{name}</h3>
