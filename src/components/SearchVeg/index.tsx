@@ -1,7 +1,9 @@
 import { Check, MagnifyingGlass, Prohibit } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { ScheduleTable, Veg } from '../../@types/vegs'
 import { SelectedVegContext } from '../../contexts/SelectedVegContext'
+import { VegsListContext } from '../../contexts/VegsListContext'
 import { api } from '../../services/api'
 import {
   SearchVegsButton,
@@ -16,23 +18,6 @@ interface SearchVegFormData {
   name: string
 }
 
-type ScheduleTable = {
-  [key: string]: {
-    [meal: string]: {
-      is_permanent: boolean
-      will_come: boolean
-    }
-  }
-}
-
-interface Veg {
-  card: number
-  name: string
-  absences: number
-  attendances: number
-  suspended: boolean
-}
-
 export function SearchVegs() {
   const { changeSelectedVeg } = useContext(SelectedVegContext)
   const {
@@ -41,20 +26,22 @@ export function SearchVegs() {
     register,
     formState: { isSubmitting },
   } = useForm<SearchVegFormData>()
-  const [vegs, setVegs] = useState<Veg[]>([])
+  const { allVegs, fetchVegs, query } = useContext(VegsListContext)
 
   const handleSearchVegs = async (values: SearchVegFormData) => {
-    const vegs = await api.get(`/vegs/search/${values.name}`)
-
-    setVegs(vegs.data)
+    await fetchVegs(values.name)
   }
+
+  useEffect(() => {
+    reset({ name: query })
+  }, [])
 
   const handleSelectVeg = async (veg: Veg) => {
     const schedule = await api.get<ScheduleTable>(
       `/vegs/scheduletable/${veg.card}`,
     )
     const vegWithSchedule = { ...veg, scheduleTable: schedule.data }
-    reset()
+    reset({ name: query })
     changeSelectedVeg(vegWithSchedule)
   }
 
@@ -79,7 +66,7 @@ export function SearchVegs() {
       </SearchVegsForm>
 
       <SearchVegsResults>
-        {vegs.map((veg) => (
+        {allVegs.map((veg) => (
           <SearchVegsResult suspended={veg.suspended} key={veg.card}>
             {veg.suspended ? <Prohibit size={24} /> : <Check size={24} />}
             <span>{veg.name}</span>
