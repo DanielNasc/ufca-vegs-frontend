@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
+import { ScheduleTable } from '../../../@types/vegs'
 import { SelectedVegContext } from '../../../contexts/SelectedVegContext'
 import { api } from '../../../services/api'
 import { ItemContainer } from './styles'
@@ -9,15 +10,6 @@ interface ItemProps {
   absences: number
   attendances: number
   suspended: boolean
-}
-
-type ScheduleTable = {
-  [key: string]: {
-    [meal: string]: {
-      is_permanent: boolean
-      will_come: boolean
-    }
-  }
 }
 
 export function Item({

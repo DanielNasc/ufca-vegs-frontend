@@ -1,15 +1,8 @@
 import { useEffect, useState } from 'react'
+import { Veg } from '../../@types/vegs'
 import { api } from '../../services/api'
 import { Item } from './Item'
 import { ListContainer } from './sytles'
-
-interface Veg {
-  name: string
-  card: number
-  absences: number
-  attendances: number
-  suspended: boolean
-}
 
 export function VegsList() {
   const [allVegs, setAllVegs] = useState<Veg[]>([] as Veg[])

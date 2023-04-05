@@ -21,6 +21,7 @@ import { AxiosError } from 'axios'
 import { AuthContext } from '../../contexts/AuthContext'
 // import { ReactComponent as NoVegImg } from '../../assets/images/no-veg-selected.svg'
 import { SearchVegs } from '../SearchVeg'
+import { ScheduleTable } from '../../@types/vegs'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
 
@@ -47,15 +48,6 @@ interface UnusualReservation {
   day: string
   meal: 'lunch' | 'dinner'
   will_come: boolean
-}
-
-type ScheduleTable = {
-  [key: string]: {
-    [meal: string]: {
-      is_permanent: boolean
-      will_come: boolean
-    }
-  }
 }
 
 function calculateRatio(absences: number, total: number) {

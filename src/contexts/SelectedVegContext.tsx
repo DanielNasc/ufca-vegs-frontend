@@ -1,13 +1,5 @@
 import { createContext, ReactNode, useState } from 'react'
-
-type ScheduleTable = {
-  [key: string]: {
-    [meal: string]: {
-      is_permanent: boolean
-      will_come: boolean
-    }
-  }
-}
+import { ScheduleTable } from '../@types/vegs'
 
 interface Veg {
   card: number
