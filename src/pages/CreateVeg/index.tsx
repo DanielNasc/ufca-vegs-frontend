@@ -1,15 +1,12 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { UserPlus } from 'phosphor-react'
 
-import { api } from '../../services/api'
+import { db } from '../../services/firebase'
 import { CreateVegContainer, FormContainer, Input } from './styles'
 import { Cell } from '../../components/Cell'
 import { SubmitFormButton } from '../../components/SubmitFormButton/styles'
 import { toast } from 'react-toastify'
-import { AxiosError } from 'axios'
-import { useContext } from 'react'
-import { AuthContext } from '../../contexts/AuthContext'
-import { Navigate } from 'react-router-dom'
+import { addDoc, collection } from 'firebase/firestore'
 
 interface CreateVegFormData {
   card: string
@@ -39,7 +36,7 @@ for (const day of DAYS) {
 RESET_VALUES.name = RESET_VALUES.card = ''
 
 export function CreateVeg() {
-  const { isAuthenticated, signOut } = useContext(AuthContext)
+  // const { isAuthenticated } = useContext(AuthContext)
   const {
     register,
     handleSubmit,
@@ -47,7 +44,7 @@ export function CreateVeg() {
     formState: { isSubmitting },
   } = useForm<CreateVegFormData>()
 
-  if (!isAuthenticated) return <Navigate to="/" />
+  // if (!isAuthenticated) return <Navigate to="/" />
 
   const handleCreateVeg: SubmitHandler<CreateVegFormData> = async (values) => {
     const body = {
@@ -68,20 +65,12 @@ export function CreateVeg() {
     }
 
     try {
-      const response = await api.post('/vegs/', body)
+      await addDoc(collection(db, 'vegs'), body)
 
-      if (response.status === 201) toast.success('🥦 Usuário criado 🥦')
-      else toast.error(`[${response.status}] - ${response.data.message}`)
-    } catch (e) {
-      if (!(e instanceof AxiosError) || !e.response) {
-        toast.error('Ocorreu um erro não identificado')
-        return
-      }
-
-      const { response } = e
-      toast.error(`[${response.status}] - ${response.data.message}`)
-
-      if (response.status === 401) signOut()
+      toast.success('Vegetariano criado com sucesso')
+    } catch (error) {
+      toast.error('Erro ao criar vegetariano')
+      console.error('Error adding document: ', error)
     }
 
     reset(RESET_VALUES)
