@@ -2,7 +2,6 @@ import { Check, MagnifyingGlass, Prohibit } from 'phosphor-react'
 import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { SelectedVegContext } from '../../contexts/SelectedVegContext'
-import { api } from '../../services/api'
 import {
   SearchVegsButton,
   SearchVegsContainer,
@@ -11,6 +10,9 @@ import {
   SearchVegsResult,
   SearchVegsResults,
 } from './styles'
+import { collection, getDocs, or, query, where } from 'firebase/firestore'
+import { db } from '../../services/firebase'
+import { api } from '../../services/api'
 
 interface SearchVegFormData {
   name: string
@@ -44,9 +46,20 @@ export function SearchVegs() {
   const [vegs, setVegs] = useState<Veg[]>([])
 
   const handleSearchVegs = async (values: SearchVegFormData) => {
-    const vegs = await api.get(`/vegs/search/${values.name}`)
+    const vegsRef = collection(db, 'vegs')
+    // query NAME LIKE values.name
+    const vegsQuery = query(
+      vegsRef,
+      or(where('name', '<=', values.name), where('name', '>=', values.name)),
+    )
 
-    setVegs(vegs.data)
+    // make the query
+    const vegsSnapshot = await getDocs(vegsQuery)
+
+    // get the data
+    const vegsData = vegsSnapshot.docs.map((doc) => doc.data())
+
+    setVegs(vegsData as Veg[])
   }
 
   const handleSelectVeg = async (veg: Veg) => {
