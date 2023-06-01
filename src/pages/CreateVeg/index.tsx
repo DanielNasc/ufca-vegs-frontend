@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { addDoc, collection } from 'firebase/firestore'
 
 interface CreateVegFormData {
-  card: string
+  card: number
   fri_dinner: boolean
   fri_lunch: boolean
   mon_dinner: boolean
@@ -23,6 +23,24 @@ interface CreateVegFormData {
   wed_lunch: boolean
 }
 
+type ScheduleTable = {
+  [key: string]: {
+    [meal: string]: {
+      is_permanent: boolean
+      will_come: boolean
+    }
+  }
+}
+
+interface Veg {
+  card: number
+  name: string
+  absences: number
+  attendances: number
+  suspended: boolean
+  scheduleTable: ScheduleTable
+}
+
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
 
 const RESET_VALUES = {} as CreateVegFormData
@@ -33,7 +51,8 @@ for (const day of DAYS) {
   }
 }
 
-RESET_VALUES.name = RESET_VALUES.card = ''
+RESET_VALUES.name = ''
+RESET_VALUES.card = 0
 
 export function CreateVeg() {
   // const { isAuthenticated } = useContext(AuthContext)
@@ -47,25 +66,46 @@ export function CreateVeg() {
   // if (!isAuthenticated) return <Navigate to="/" />
 
   const handleCreateVeg: SubmitHandler<CreateVegFormData> = async (values) => {
-    const body = {
+    const newVeg: Veg = {
       card: values.card,
       name: values.name,
-      schedule: [] as any[],
+      scheduleTable: {} as ScheduleTable,
+      absences: 0,
+      attendances: 0,
+      suspended: false,
     }
 
     for (const day of DAYS) {
       for (const meal of ['lunch', 'dinner'] as const) {
         if (values[`${day}_${meal}`]) {
-          body.schedule.push({
-            day,
-            meal,
-          })
+          // if the checkbox is checked
+          if (!newVeg.scheduleTable[day]) {
+            // if the day is not in the schedule table
+            newVeg.scheduleTable[day] = {}
+          }
+
+          // add the meal to the day
+          newVeg.scheduleTable[day][meal] = {
+            is_permanent: true,
+            will_come: true,
+          }
+        } else {
+          // the veg will not come to the meal
+          if (!newVeg.scheduleTable[day]) {
+            // if the day is not in the schedule table
+            newVeg.scheduleTable[day] = {}
+          }
+
+          newVeg.scheduleTable[day][meal] = {
+            is_permanent: true,
+            will_come: false,
+          }
         }
       }
     }
 
     try {
-      await addDoc(collection(db, 'vegs'), body)
+      await addDoc(collection(db, 'vegs'), newVeg)
 
       toast.success('Vegetariano criado com sucesso')
     } catch (error) {
