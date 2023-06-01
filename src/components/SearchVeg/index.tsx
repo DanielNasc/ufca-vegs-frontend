@@ -12,7 +12,7 @@ import {
 } from './styles'
 import { collection, getDocs, or, query, where } from 'firebase/firestore'
 import { db } from '../../services/firebase'
-import { api } from '../../services/api'
+// import { api } from '../../services/api'
 
 interface SearchVegFormData {
   name: string
@@ -33,6 +33,7 @@ interface Veg {
   absences: number
   attendances: number
   suspended: boolean
+  scheduleTable: ScheduleTable
 }
 
 export function SearchVegs() {
@@ -63,12 +64,12 @@ export function SearchVegs() {
   }
 
   const handleSelectVeg = async (veg: Veg) => {
-    const schedule = await api.get<ScheduleTable>(
-      `/vegs/scheduletable/${veg.card}`,
-    )
-    const vegWithSchedule = { ...veg, scheduleTable: schedule.data }
+    // const schedule = await api.get<ScheduleTable>(
+    //   `/vegs/scheduletable/${veg.card}`,
+    // )
+    // const vegWithSchedule = { ...veg, scheduleTable: schedule.data }
     reset()
-    changeSelectedVeg(vegWithSchedule)
+    changeSelectedVeg(veg)
   }
 
   return (
