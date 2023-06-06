@@ -40,9 +40,15 @@ export function SearchVegs() {
     const vegsSnapshot = await getDocs(vegsQuery)
 
     // get the data
-    const vegsData = vegsSnapshot.docs.map((doc) => doc.data())
+    const vegsData = vegsSnapshot.docs.map(
+      (doc) =>
+        ({
+          id: doc.id,
+          ...doc.data(),
+        } as Vegetarian),
+    )
 
-    setVegs(vegsData as Vegetarian[])
+    setVegs(vegsData)
   }
 
   const handleSelectVeg = async (veg: Vegetarian) => {
