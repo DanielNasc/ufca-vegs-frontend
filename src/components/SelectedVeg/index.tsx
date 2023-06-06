@@ -21,6 +21,8 @@ import { AxiosError } from 'axios'
 import { AuthContext } from '../../contexts/AuthContext'
 // import { ReactComponent as NoVegImg } from '../../assets/images/no-veg-selected.svg'
 import { SearchVegs } from '../SearchVeg'
+import { doc, updateDoc } from 'firebase/firestore'
+import { db } from '../../services/firebase'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
 
@@ -42,12 +44,12 @@ interface EditVegCardFormData {
   new_card: string
 }
 
-interface UnusualReservation {
-  card: string
-  day: string
-  meal: 'lunch' | 'dinner'
-  will_come: boolean
-}
+// interface UnusualReservation {
+//   card: string
+//   day: string
+//   meal: 'lunch' | 'dinner'
+//   will_come: boolean
+// }
 
 type ScheduleTable = {
   [key: string]: {
@@ -113,11 +115,34 @@ export function SelectedVeg() {
   }
 
   const handleUpdateVeg: SubmitHandler<EditVegFormData> = async (values) => {
-    const body = {
-      card: selectedVeg.card,
-      unusualReservations: [] as UnusualReservation[],
-      is_permanent: values.is_permanent,
-    }
+    // const body = {
+    //   card: selectedVeg.card,
+    //   unusualReservations: [] as UnusualReservation[],
+    //   is_permanent: values.is_permanent,
+    // }
+    // const unusualReservations = [] as UnusualReservation[]
+
+    const newScheduleTable: ScheduleTable = structuredClone(
+      selectedVeg.scheduleTable,
+    )
+
+    // for (const newReservation of unusualReservations) {
+    //   const oldReservation =
+    //     selectedVeg.scheduleTable[newReservation.day][newReservation.meal]
+
+    //   let isPermanent = values.is_permanent
+
+    //   if (oldReservation && !oldReservation.is_permanent) {
+    //     isPermanent = true
+    //   }
+
+    //   newScheduleTable[newReservation.day][newReservation.meal] = {
+    //     is_permanent: isPermanent,
+    //     will_come: newReservation.will_come,
+    //   }
+    // }
+
+    let changedSomething = false
 
     for (const day of DAYS) {
       for (const meal of ['lunch', 'dinner'] as const) {
@@ -125,63 +150,42 @@ export function SelectedVeg() {
         const reservation = selectedVeg.scheduleTable[day][meal]
 
         if (values[key] !== reservation.will_come) {
-          body.unusualReservations.push({
-            card: selectedVeg.card,
-            meal,
-            day,
-            will_come: values[key],
-          })
-        }
-      }
-    }
+          changedSomething = true
+          let isPermanent = values.is_permanent
 
-    if (!body.unusualReservations.length) return
-
-    try {
-      const response = await api.post('/vegs/unusual', body)
-
-      if (response.status === 201) {
-        toast.success('🥦 Usuário Atualizado! 🥦')
-        const newScheduleTable: ScheduleTable = structuredClone(
-          selectedVeg.scheduleTable,
-        )
-
-        for (const newReservation of body.unusualReservations) {
-          const oldReservation =
-            selectedVeg.scheduleTable[newReservation.day][newReservation.meal]
-
-          let isPermanent = body.is_permanent
-
-          if (oldReservation && !oldReservation.is_permanent) {
+          // checar se está voltando para um estado permanente
+          if (!reservation.is_permanent) {
             isPermanent = true
           }
 
-          newScheduleTable[newReservation.day][newReservation.meal] = {
+          newScheduleTable[day][meal] = {
             is_permanent: isPermanent,
-            will_come: newReservation.will_come,
+            will_come: values[key],
           }
         }
-
-        changeSelectedVeg({
-          ...selectedVeg,
-          scheduleTable: newScheduleTable,
-        })
-      } else {
-        toast.error(`[${response.status}] - ${response.data.message}`)
       }
-
-      resetCard({ new_card: '0' })
-    } catch (e) {
-      if (!(e instanceof AxiosError) || !e.response) {
-        toast.error('Ocorreu um erro não identificado')
-        return
-      }
-
-      const { response } = e
-      toast.error(`[${response.status}] - ${response.data.message}`)
-
-      if (response.status === 401) signOut()
     }
+
+    if (!changedSomething) {
+      toast.info('Nenhuma alteração foi feita')
+      return
+    }
+    // if (!body.unusualReservations.length) return
+
+    const vegRef = doc(db, 'vegs', selectedVeg.id)
+
+    await updateDoc(vegRef, {
+      scheduleTable: newScheduleTable,
+    })
+
+    toast.success('🥦 Usuário Atualizado! 🥦')
+
+    changeSelectedVeg({
+      ...selectedVeg,
+      scheduleTable: newScheduleTable,
+    })
+
+    resetCard({ new_card: '0' })
   }
 
   const handleUpdateCard: SubmitHandler<EditVegCardFormData> = async (

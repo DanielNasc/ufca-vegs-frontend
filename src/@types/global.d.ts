@@ -1,6 +1,7 @@
 /* global */
 declare global {
   export type Vegetarian = {
+    id: string
     name: string
     card: string
     absences: number
