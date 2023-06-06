@@ -3,16 +3,8 @@ import { api } from '../../services/api'
 import { Item } from './Item'
 import { ListContainer } from './sytles'
 
-interface Veg {
-  name: string
-  card: number
-  absences: number
-  attendances: number
-  suspended: boolean
-}
-
 export function VegsList() {
-  const [allVegs, setAllVegs] = useState<Veg[]>([] as Veg[])
+  const [allVegs, setAllVegs] = useState<Vegetarian[]>([] as Vegetarian[])
 
   async function fetchVegs() {
     const vegs = await api.get('/vegs')

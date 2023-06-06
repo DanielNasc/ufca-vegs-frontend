@@ -13,14 +13,14 @@ interface ILoginFormData {
 export function Login() {
   const { isAuthenticated, signIn } = useContext(AuthContext)
 
-  if (isAuthenticated) return <Navigate to="/" />
-
   const { register, handleSubmit, reset } = useForm<ILoginFormData>({
     defaultValues: {
       email: '',
       password: '',
     },
   })
+
+  if (isAuthenticated) return <Navigate to="/" />
 
   const handleLogin: SubmitHandler<ILoginFormData> = async ({
     email,

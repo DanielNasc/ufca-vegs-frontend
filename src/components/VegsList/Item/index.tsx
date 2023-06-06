@@ -5,7 +5,7 @@ import { ItemContainer } from './styles'
 
 interface ItemProps {
   name: string
-  card: number
+  card: string
   absences: number
   attendances: number
   suspended: boolean

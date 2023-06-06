@@ -39,11 +39,11 @@ interface EditVegFormData {
 }
 
 interface EditVegCardFormData {
-  new_card: number
+  new_card: string
 }
 
 interface UnusualReservation {
-  card: number
+  card: string
   day: string
   meal: 'lunch' | 'dinner'
   will_come: boolean
@@ -170,7 +170,7 @@ export function SelectedVeg() {
         toast.error(`[${response.status}] - ${response.data.message}`)
       }
 
-      resetCard({ new_card: 0 })
+      resetCard({ new_card: '0' })
     } catch (e) {
       if (!(e instanceof AxiosError) || !e.response) {
         toast.error('Ocorreu um erro não identificado')

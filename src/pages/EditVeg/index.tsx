@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import { Navigate } from 'react-router-dom'
+// import { Navigate } from 'react-router-dom'
 import { SelectedVeg } from '../../components/SelectedVeg'
 // import { VegsList } from '../../components/VegsList'
 import { SelectedVegContext } from '../../contexts/SelectedVegContext'

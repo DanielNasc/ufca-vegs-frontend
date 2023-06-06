@@ -18,24 +18,6 @@ interface SearchVegFormData {
   name: string
 }
 
-type ScheduleTable = {
-  [key: string]: {
-    [meal: string]: {
-      is_permanent: boolean
-      will_come: boolean
-    }
-  }
-}
-
-interface Veg {
-  card: number
-  name: string
-  absences: number
-  attendances: number
-  suspended: boolean
-  scheduleTable: ScheduleTable
-}
-
 export function SearchVegs() {
   const { changeSelectedVeg } = useContext(SelectedVegContext)
   const {
@@ -44,7 +26,7 @@ export function SearchVegs() {
     register,
     formState: { isSubmitting },
   } = useForm<SearchVegFormData>()
-  const [vegs, setVegs] = useState<Veg[]>([])
+  const [vegs, setVegs] = useState<Vegetarian[]>([])
 
   const handleSearchVegs = async (values: SearchVegFormData) => {
     const vegsRef = collection(db, 'vegs')
@@ -60,10 +42,10 @@ export function SearchVegs() {
     // get the data
     const vegsData = vegsSnapshot.docs.map((doc) => doc.data())
 
-    setVegs(vegsData as Veg[])
+    setVegs(vegsData as Vegetarian[])
   }
 
-  const handleSelectVeg = async (veg: Veg) => {
+  const handleSelectVeg = async (veg: Vegetarian) => {
     // const schedule = await api.get<ScheduleTable>(
     //   `/vegs/scheduletable/${veg.card}`,
     // )
