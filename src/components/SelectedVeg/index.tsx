@@ -2,7 +2,6 @@ import { ArrowLeft, NotePencil, Trash } from 'phosphor-react'
 import { useContext, useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { SelectedVegContext } from '../../contexts/SelectedVegContext'
-import { api } from '../../services/api'
 import { Cell } from '../Cell'
 import { SubmitFormButton } from '../SubmitFormButton/styles'
 import {
@@ -17,11 +16,10 @@ import {
 } from './styles'
 import { CheckboxInput } from './CheckboxInput'
 import { toast } from 'react-toastify'
-import { AxiosError } from 'axios'
-import { AuthContext } from '../../contexts/AuthContext'
+// import { AuthContext } from '../../contexts/AuthContext'
 // import { ReactComponent as NoVegImg } from '../../assets/images/no-veg-selected.svg'
 import { SearchVegs } from '../SearchVeg'
-import { doc, updateDoc } from 'firebase/firestore'
+import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { db } from '../../services/firebase'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
@@ -74,7 +72,7 @@ export function SelectedVeg() {
   } = useForm<EditVegFormData>()
 
   const { selectedVeg } = useContext(SelectedVegContext)
-  const { signOut } = useContext(AuthContext)
+  // const { signOut } = useContext(AuthContext)
 
   const { changeSelectedVeg } = useContext(SelectedVegContext)
 
@@ -191,59 +189,53 @@ export function SelectedVeg() {
   const handleUpdateCard: SubmitHandler<EditVegCardFormData> = async (
     values,
   ) => {
-    const body = {
-      old_card: selectedVeg.card,
-      new_card: values.new_card,
-    }
+    const vegRef = doc(db, 'vegs', selectedVeg.id)
 
-    try {
-      const response = await api.patch('/vegs/card', body)
+    await updateDoc(vegRef, {
+      card: values.new_card,
+    })
 
-      if (response.status === 200) {
-        toast.success('🥦 Usuário Atualizado! 🥦')
-        changeSelectedVeg({
-          ...selectedVeg,
-          card: values.new_card,
-        })
-      }
-    } catch (e) {
-      if (!(e instanceof AxiosError) || !e.response) {
-        toast.error('Ocorreu um erro não identificado')
-        return
-      }
-
-      const { response } = e
-      toast.error(`[${response.status}] - ${response.data.message}`)
-
-      if (response.status === 401) signOut()
-    }
+    toast.success('🥦 Cartão Atualizado! 🥦')
   }
 
   async function handleDecrementAbscence() {
-    // req.params.id
     if (!selectedVeg || selectedVeg.absences < 1) return
-    await api.put(`/vegs/decrementabsences/${selectedVeg!.card}`)
+
+    const vegRef = doc(db, 'vegs', selectedVeg.id)
+
+    await updateDoc(vegRef, {
+      absences: selectedVeg.absences - 1,
+    })
+
     changeSelectedVeg({ ...selectedVeg, absences: selectedVeg.absences - 1 })
   }
 
   async function handleDeleteVeg() {
     if (!selectedVeg) return
-    await api.delete(`/vegs/${selectedVeg.card}`)
+
+    const vegRef = doc(db, 'vegs', selectedVeg.id)
+
+    await deleteDoc(vegRef)
+
     changeSelectedVeg(null)
+
+    toast.success('🥦 Usuário Deletado! 🥦')
   }
 
   function handleCancel() {
     changeSelectedVeg(null)
   }
 
-  async function handleSuspendVeg() {
+  async function handleToggleVegSuspension() {
     if (!selectedVeg) return
 
-    const response = await api.put(`/vegs/togglesuspended/${selectedVeg.card}`)
+    const vegRef = doc(db, 'vegs', selectedVeg.id)
 
-    if (response.status === 200) {
-      changeSelectedVeg({ ...selectedVeg, suspended: !selectedVeg.suspended })
-    }
+    await updateDoc(vegRef, {
+      suspended: !selectedVeg.suspended,
+    })
+
+    changeSelectedVeg({ ...selectedVeg, suspended: !selectedVeg.suspended })
   }
 
   return (
@@ -334,7 +326,7 @@ export function SelectedVeg() {
         </div>
         <div>
           <p>Suspenso: {selectedVeg.suspended ? 'Sim' : 'Não'}</p>
-          <ChangeInfoButton type="button" onClick={handleSuspendVeg}>
+          <ChangeInfoButton type="button" onClick={handleToggleVegSuspension}>
             Mudar
           </ChangeInfoButton>
         </div>
