@@ -6,6 +6,7 @@ interface IVegsListContextData {
   allVegs: Veg[]
   query: string
   fetchVegs: (query: string) => Promise<void>
+  removeVegFromList: (vegId: number) => void
 }
 
 interface IVegsListProviderProps {
@@ -27,8 +28,16 @@ export function VegsListContextProvider({ children }: IVegsListProviderProps) {
     setQuery(query)
   }
 
+  const removeVegFromList = (vegId: number) => {
+    const updatedVegs = allVegs.filter((veg) => veg.card !== vegId)
+
+    setAllVegs(updatedVegs)
+  }
+
   return (
-    <VegsListContext.Provider value={{ allVegs, query, fetchVegs }}>
+    <VegsListContext.Provider
+      value={{ allVegs, query, fetchVegs, removeVegFromList }}
+    >
       {children}
     </VegsListContext.Provider>
   )

@@ -22,6 +22,7 @@ import { AuthContext } from '../../contexts/AuthContext'
 // import { ReactComponent as NoVegImg } from '../../assets/images/no-veg-selected.svg'
 import { SearchVegs } from '../SearchVeg'
 import { ScheduleTable } from '../../@types/vegs'
+import { VegsListContext } from '../../contexts/VegsListContext'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri'] as const
 
@@ -65,6 +66,7 @@ export function SelectedVeg() {
 
   const { selectedVeg } = useContext(SelectedVegContext)
   const { signOut } = useContext(AuthContext)
+  const { removeVegFromList } = useContext(VegsListContext)
 
   const { changeSelectedVeg } = useContext(SelectedVegContext)
 
@@ -218,6 +220,7 @@ export function SelectedVeg() {
     if (!selectedVeg) return
     await api.delete(`/vegs/${selectedVeg.card}`)
     changeSelectedVeg(null)
+    removeVegFromList(selectedVeg.card)
   }
 
   function handleCancel() {
